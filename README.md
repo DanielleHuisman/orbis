@@ -1,2 +1,3 @@
-# orbis
+# Orbis
+
 Orbis is a GraphQL server framework on top of TypeORM and Nexus.
