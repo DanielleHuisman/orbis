@@ -1,4 +1,4 @@
-import {Constructor} from 'orbis-server';
+import {Constructor} from '@orbis-framework/core';
 
 import {BaseUser} from './entities';
 

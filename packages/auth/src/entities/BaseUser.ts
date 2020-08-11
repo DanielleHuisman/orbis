@@ -1,5 +1,5 @@
 import {OneToMany} from 'typeorm';
-import {Relation} from 'orbis-server';
+import {Relation} from '@orbis-framework/core';
 
 import {orbis} from '../orbis';
 

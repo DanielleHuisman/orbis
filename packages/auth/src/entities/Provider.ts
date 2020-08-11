@@ -1,5 +1,5 @@
 import {Entity, PrimaryColumn, Column, ManyToOne} from 'typeorm';
-import {Relation} from 'orbis-server';
+import {Relation} from '@orbis-framework/core';
 
 import {getUserType} from '../config';
 import {orbis} from '../orbis';

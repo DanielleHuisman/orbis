@@ -11,6 +11,9 @@
     },
     "keywords": [
         "orbis",
+        "graphql",
+        "server",
+        "framework",
         "auth",
         "authentication"
     ],
@@ -33,11 +36,11 @@
         "dev": "tsc --watch"
     },
     "peerDependencies": {
-        "orbis-server": ">=0.1.15",
+        "@orbis-framework/core": ">=0.0.1",
         "typeorm": ">=0.2.23"
     },
     "devDependencies": {
-        "orbis-server": "^0.1.15",
+        "@orbis-framework/core": "^0.0.1",
         "typeorm": "^0.2.25"
     },
     "gitHead": "d41c5939fe53153a36622a03845ea7bf0dbcfff8"
