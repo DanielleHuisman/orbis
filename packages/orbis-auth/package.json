@@ -14,6 +14,9 @@
         "auth",
         "authentication"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
@@ -37,5 +40,5 @@
         "orbis-server": "^0.1.15",
         "typeorm": "^0.2.25"
     },
-    "gitHead": "cdac45b46a6e3fdc2bce4932bb40addc62e187cc"
+    "gitHead": "d41c5939fe53153a36622a03845ea7bf0dbcfff8"
 }
