@@ -1,9 +1,10 @@
 import {Entity, PrimaryColumn, Column, ManyToOne} from 'typeorm';
 import {Relation} from 'orbis-server';
 
+import {getUserType} from '../config';
 import {orbis} from '../orbis';
 
-import {User} from './User';
+import {BaseUser} from './BaseUser';
 
 export enum ProviderType {
     LOCAL = 'LOCAL',
@@ -43,7 +44,7 @@ export class Provider {
     @Column({type: 'boolean', default: () => 'false'})
     isVerified: boolean;
 
-    @orbis.Field(() => User)
-    @ManyToOne(() => User, (user) => user.providers, {onDelete: 'CASCADE', lazy: true})
-    user: Relation<User>;
+    @orbis.Field(() => getUserType())
+    @ManyToOne(() => getUserType(), (user) => user.providers, {onDelete: 'CASCADE', lazy: true})
+    user: Relation<BaseUser>;
 }
