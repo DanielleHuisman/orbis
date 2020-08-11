@@ -36,5 +36,6 @@
     "devDependencies": {
         "orbis-server": "^0.1.15",
         "typeorm": "^0.2.25"
-    }
+    },
+    "gitHead": "cdac45b46a6e3fdc2bce4932bb40addc62e187cc"
 }
