@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "lib": ["esnext"],
+        "module": "esnext",
+        "moduleResolution": "node",
+
+        "outDir": "dist",
+
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "strict": true,
+        "strictPropertyInitialization": false
+    }
+}

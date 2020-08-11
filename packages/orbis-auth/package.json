@@ -1,0 +1,41 @@
+{
+    "name": "@orbis-framework/auth",
+    "description": "Authentication module for Orbis.",
+    "version": "0.0.0",
+    "license": "MIT",
+    "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DanielHuisman/orbis.git",
+        "directory": "packages/orbis-auth"
+    },
+    "keywords": [
+        "orbis",
+        "auth",
+        "authentication"
+    ],
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "LICENSE.md",
+        "README.md",
+        "package.json"
+    ],
+    "scripts": {
+        "clean": "rimraf dist",
+        "build": "yarn run clean && yarn run build:ts",
+        "build:ts": "tsc",
+        "prepublishOnly": "yarn run build",
+        "dev": "tsc --watch"
+    },
+    "peerDependencies": {
+        "orbis-server": ">=0.1.15",
+        "typeorm": ">=0.2.23"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "orbis-server": "^0.1.15",
+        "typeorm": "^0.2.25"
+    }
+}

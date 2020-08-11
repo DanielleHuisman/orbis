@@ -2,7 +2,10 @@
     "name": "orbis",
     "private": true,
     "license": "MIT",
+    "workspaces": ["packages/*"],
     "devDependencies": {
-        "lerna": "^3.22.1"
+        "lerna": "^3.22.1",
+        "rimraf": "^3.0.2",
+        "typescript": "^3.9.7"
     }
 }
