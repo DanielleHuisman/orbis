@@ -1,0 +1,55 @@
+{
+    "name": "@orbis-framework/core",
+    "description": "Core module for Orbis.",
+    "version": "0.0.1",
+    "license": "MIT",
+    "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DanielHuisman/orbis.git",
+        "directory": "packages/core"
+    },
+    "keywords": [
+        "orbis",
+        "graphql",
+        "server",
+        "framework",
+        "core"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "LICENSE.md",
+        "README.md",
+        "package.json"
+    ],
+    "scripts": {
+        "clean": "rimraf dist",
+        "build": "yarn run clean && yarn run build:ts",
+        "build:ts": "tsc",
+        "prepublishOnly": "yarn run build",
+        "dev": "tsc --watch"
+    },
+    "peerDependencies": {
+        "@nexus/schema": ">=0.14.0",
+        "typeorm": ">=0.2.23"
+    },
+    "dependencies": {
+        "@types/graphql-iso-date": "^3.3.3",
+        "@types/node": "^13.13.4",
+        "@types/pluralize": "^0.0.29",
+        "@types/yup": "^0.28.0",
+        "graphql": "^15.0.0",
+        "graphql-iso-date": "^3.6.1",
+        "pluralize": "^8.0.0",
+        "yup": "^0.28.5"
+    },
+    "devDependencies": {
+        "@nexus/schema": "0.14.0",
+        "typeorm": "^0.2.25"
+    }
+}
