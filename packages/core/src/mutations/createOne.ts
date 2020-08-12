@@ -29,64 +29,64 @@ export const createEntity = async <Entity>(
     args: CreateOneArguments,
     options: OperationOptions = {}
 ): Promise<Entity> => {
-        // Find entity repository
-        const repository = orbis.getManager().getRepository(metadata.Entity);
+    // Find entity repository
+    const repository = orbis.getManager().getRepository(metadata.Entity);
 
-        // Find entity metadata
-        const entityMetadata = orbis.getConnection().entityMetadatas.find((e) => e.name === metadata.Entity.name);
+    // Find entity metadata
+    const entityMetadata = orbis.getConnection().entityMetadatas.find((e) => e.name === metadata.Entity.name);
 
-        // Create insert query builder
-        const qb = repository
-            .createQueryBuilder(metadata.singularName)
-            .insert();
+    // Create insert query builder
+    const qb = repository
+        .createQueryBuilder(metadata.singularName)
+        .insert();
 
-        // Parse data
-        const values: ObjectLiteral = {};
-        for (const [fieldName, fieldValue] of Object.entries(args.data)) {
-            if (metadata.relations.includes(fieldName)) {
-                // Find relation metadata
-                const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
+    // Parse data
+    const values: ObjectLiteral = {};
+    for (const [fieldName, fieldValue] of Object.entries(args.data)) {
+        if (metadata.relations.includes(fieldName)) {
+            // Find relation metadata
+            const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
 
-                if (Array.isArray(fieldValue)) {
-                    for (const value of fieldValue as any[]) {
-                        await updateRelation(orbis, metadata, fieldName, value, false, {
-                            context: options.context
-                        });
-
-                        // TODO: is it possible for this side to be owning? Many-to-many?
-                        // if (relationMetadata.isOwning) {
-                        //     values[] = identifier;
-                        // }
-                    }
-                } else {
-                    const identifier = await updateRelation(orbis, metadata, fieldName, fieldValue, false, {
+            if (Array.isArray(fieldValue)) {
+                for (const value of fieldValue as any[]) {
+                    await updateRelation(orbis, metadata, fieldName, value, false, {
                         context: options.context
                     });
 
-                    if (relationMetadata.isOwning) {
-                        values[fieldName] = identifier;
-                    }
+                    // TODO: is it possible for this side to be owning? Many-to-many?
+                    // if (relationMetadata.isOwning) {
+                    //     values[] = identifier;
+                    // }
                 }
             } else {
-                values[fieldName] = fieldValue;
+                const identifier = await updateRelation(orbis, metadata, fieldName, fieldValue, false, {
+                    context: options.context
+                });
+
+                if (relationMetadata.isOwning) {
+                    values[fieldName] = identifier;
+                }
             }
+        } else {
+            values[fieldName] = fieldValue;
         }
+    }
 
-        // Merge values from create metadata
-        mergeCreateMetadata(values, orbis.getOption('entity', {}).create);
-        mergeCreateMetadata(values, metadata.create);
+    // Merge values from create metadata
+    mergeCreateMetadata(values, orbis.getOption('entity', {}).create);
+    mergeCreateMetadata(values, metadata.create);
 
-        // Schema validation
-        if (orbis.getMetadata().hasSchema(metadata.Entity.name)) {
-            await orbis.getMetadata().getSchema(metadata.Entity.name).validate(values);
-        }
+    // Schema validation
+    if (orbis.getMetadata().hasSchema(metadata.Entity.name)) {
+        await orbis.getMetadata().getSchema(metadata.Entity.name).validate(values);
+    }
 
-        // Execute insert query
-        qb.values(values);
-        const result = await qb.execute();
+    // Execute insert query
+    qb.values(values);
+    const result = await qb.execute();
 
-        // Return entity identifier
-        return result.identifiers[0] as Entity;
+    // Return entity identifier
+    return result.identifiers[0] as Entity;
 };
 
 export const createOne = async <Entity>(

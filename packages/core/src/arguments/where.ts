@@ -123,7 +123,7 @@ export const parseWhereArgument = (
                     } else if (OPERATORS[operatorName]) {
                         qb.andWhere(`${fieldVarPath} ${OPERATORS[operatorName]} :${fieldVarName}`, {
                             [fieldVarName]: OPERATOR_VALUE_MODIFIERS[operatorName] ?
-                            OPERATOR_VALUE_MODIFIERS[operatorName](operatorValue) : operatorValue
+                                OPERATOR_VALUE_MODIFIERS[operatorName](operatorValue) : operatorValue
                         });
                     } else {
                         throw new Error(`Unsupported operator "${operatorName}"`);

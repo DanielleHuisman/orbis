@@ -6,7 +6,6 @@ import * as yup from 'yup';
 import {Orbis} from './orbis';
 import {EntityMetadata, FieldMetadata} from './metadata';
 
-/* tslint:disable-next-line */
 export type Constructor<T> = (new () => T) | Function;
 
 export type Enum = {
@@ -22,7 +21,7 @@ export const hasPrototype = (obj: any, prototype: Constructor<any>) => {
 
 export const fixNullPrototypes = (data: any) => {
     for (const value of Object.values(data)) {
-        // @ts-ignore
+        // @ts-ignore: TypeScript doesn't allow __proto__ to be accessed
         if (typeof value === 'object' && value && value.__proto__ === undefined) {
             Object.setPrototypeOf(value, {});
 
@@ -69,7 +68,7 @@ export const isGeneratedField = (field: FieldMetadata) => {
 
 export type Context = GetGen<'context'>;
 
-export type EntityFieldResolver<Type, Options = {}> = (
+export type EntityFieldResolver<Type, Options = Record<string, unknown>> = (
     orbis: Orbis,
     metadata: EntityMetadata,
     args: ArgsValue<string, string>,

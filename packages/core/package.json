@@ -28,8 +28,9 @@
         "package.json"
     ],
     "scripts": {
+        "lint": "eslint src/**/*.ts",
         "clean": "rimraf dist",
-        "build": "yarn run clean && yarn run build:ts",
+        "build": "yarn run clean && yarn run lint && yarn run build:ts",
         "build:ts": "tsc",
         "prepublishOnly": "yarn run build",
         "dev": "tsc --watch"
