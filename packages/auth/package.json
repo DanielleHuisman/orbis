@@ -43,6 +43,5 @@
     "devDependencies": {
         "@orbis-framework/core": "^0.1.1",
         "typeorm": "^0.2.25"
-    },
-    "gitHead": "d41c5939fe53153a36622a03845ea7bf0dbcfff8"
+    }
 }
