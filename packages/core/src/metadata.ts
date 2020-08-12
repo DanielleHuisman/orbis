@@ -199,6 +199,10 @@ export class OrbisMetadata {
         return this.hasFields(typeName) && !!this.fields[typeName][fieldName];
     }
 
+    getAllFields() {
+        return this.fields;
+    }
+
     getFields(typeName: string) {
         return this.fields[typeName];
     }
@@ -244,5 +248,39 @@ export class OrbisMetadata {
 
     addSchema(typeName: string, schema: YupObjectSchema) {
         this.schemas[typeName] = schema;
+    }
+
+    merge(other: OrbisMetadata) {
+        // Merge types
+        for (const type of Object.values(other.getTypes())) {
+            this.addType(type);
+        }
+
+        // Merge interfaces
+        for (const [typeName, metadata] of Object.entries(other.getInterfaces())) {
+            this.addInterface(typeName, metadata);
+        }
+
+        // Merge objects
+        for (const [typeName, metadata] of Object.entries(other.getObjects())) {
+            this.addObject(typeName, metadata);
+        }
+
+        // Merge entities
+        for (const [typeName, metadata] of Object.entries(other.getEntities())) {
+            this.addEntity(typeName, metadata);
+        }
+
+        // Merge fields
+        for (const [typeName, fields] of Object.entries(other.getAllFields())) {
+            for (const [fieldName, metadata] of Object.entries(fields)) {
+                this.addField(typeName, fieldName, metadata);
+            }
+        }
+
+        // Merge schemas
+        for (const [typeName, schema] of Object.entries(other.getSchemas())) {
+            this.addSchema(typeName, schema);
+        }
     }
 }

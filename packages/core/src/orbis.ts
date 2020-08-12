@@ -157,6 +157,16 @@ export class Orbis {
         });
     }
 
+    merge(other: Orbis) {
+        // Merge options
+        if (Object.keys(other.options).length > 0) {
+            throw new Error('Merging options it currently not supported');
+        }
+
+        // Merge metadata
+        this.metadata.merge(other.getMetadata());
+    }
+
     async transaction<Result>(operation: () => Promise<Result>, errorOnActiveTransaction: boolean = true): Promise<Result> {
         // Check if a transaction is already active
         if (this.currentManager) {
