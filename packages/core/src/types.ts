@@ -1,6 +1,5 @@
 import {GraphQLDate, GraphQLTime, GraphQLDateTime} from 'graphql-iso-date';
 
-import {registerEnumType} from './enums';
 import {Orbis} from './orbis';
 
 // Export date and time scalars
@@ -53,7 +52,7 @@ export const registerOrbisTypes = (orbis: Orbis) => {
     orbis.registerScalarType(GraphQLTime);
     orbis.registerScalarType(GraphQLDateTime);
 
-    registerEnumType({
+    orbis.registerEnumType({
         name: 'OrderByArg',
         members: OrderByArg
     });
