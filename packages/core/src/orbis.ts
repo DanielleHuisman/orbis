@@ -11,6 +11,7 @@ import {registerObjectType, OrbisObject, OrbisObjectOptions} from './objects';
 import {FindOneArguments, FindOneOptions, FindFirstArguments, FindManyArguments} from './queries';
 import {Repository} from './repository';
 import {registerScalarType, OrbisScalarOptions} from './scalars';
+import {registerOrbisTypes} from './types';
 import {registerUnionType, OrbisUnionOptions} from './unions';
 import {Constructor, OperationOptions} from './util';
 
@@ -34,6 +35,8 @@ export class Orbis {
 
     constructor(options: OrbisOptions = {}) {
         this.options = options;
+
+        registerOrbisTypes(this);
     }
 
     getOptions() {

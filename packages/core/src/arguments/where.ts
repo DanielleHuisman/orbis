@@ -2,18 +2,11 @@ import {Brackets, WhereExpression, SelectQueryBuilder, BaseEntity} from 'typeorm
 
 import {Orbis} from '../orbis';
 import {resolveFieldType} from '../fields';
-import {IntFilter, FloatFilter, StringFilter, DateTimeFilter} from '../types';
+import {IntFilter, FloatFilter, StringFilter, DateTimeFilter, EnumFilter} from '../types';
 
 import {relationPathToVarName} from './relations';
 
 // TODO: find a way to have correct where typing (typegen?)
-
-export interface EnumFilter {
-    equals?: any;
-    not?: any;
-    in?: any[];
-    noIn?: any[];
-}
 
 export type WhereArgument = {
     [key: string]: boolean | IntFilter | FloatFilter | StringFilter | DateTimeFilter | EnumFilter | WhereArgument | WhereArgument[];

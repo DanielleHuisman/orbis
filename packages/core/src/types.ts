@@ -1,15 +1,7 @@
 import {GraphQLDate, GraphQLTime, GraphQLDateTime} from 'graphql-iso-date';
 
 import {registerEnumType} from './enums';
-import {OrbisField} from './fields';
-import {OrbisInputObject} from './inputObjects';
-import {OrbisObject} from './objects';
-import {registerScalarType} from './scalars';
-
-// Add date and time scalars
-registerScalarType(GraphQLDate);
-registerScalarType(GraphQLTime);
-registerScalarType(GraphQLDateTime);
+import {Orbis} from './orbis';
 
 // Export date and time scalars
 export {
@@ -23,135 +15,185 @@ export enum OrderByArg {
     DESC = 'DESC'
 }
 
-registerEnumType({
-    name: 'OrderByArg',
-    members: OrderByArg
-});
-
-@OrbisInputObject()
-export class IntFilter {
-
-    @OrbisField({nullable: true})
-    equals?: number;
-
-    @OrbisField({nullable: true})
-    not?: number;
-
-    @OrbisField(() => [Number], {nullable: true})
-    in?: number[];
-
-    @OrbisField(() => [Number], {nullable: true})
-    notIn?: number[];
-
-    @OrbisField({nullable: true})
-    lt?: number;
-
-    @OrbisField({nullable: true})
-    lte?: number;
-
-    @OrbisField({nullable: true})
-    gt?: number;
-
-    @OrbisField({nullable: true})
-    gte?: number;
+export interface Filter<Type> {
+    equals?: Type;
+    not?: Type;
+    in?: Type[];
+    notIn?: Type[];
+    lt?: Type;
+    lte?: Type;
+    gt?: Type;
+    gte?: Type;
 }
 
-@OrbisInputObject()
-export class FloatFilter {
+export type IntFilter = Filter<number>;
+export type FloatFilter = Filter<number>;
 
-    @OrbisField({float: true, nullable: true})
-    equals?: number;
-
-    @OrbisField({float: true, nullable: true})
-    not?: number;
-
-    @OrbisField(() => [Number], {float: true, nullable: true})
-    in?: number[];
-
-    @OrbisField(() => [Number], {float: true, nullable: true})
-    notIn?: number[];
-
-    @OrbisField({float: true, nullable: true})
-    lt?: number;
-
-    @OrbisField({float: true, nullable: true})
-    lte?: number;
-
-    @OrbisField({float: true, nullable: true})
-    gt?: number;
-
-    @OrbisField({float: true, nullable: true})
-    gte?: number;
-}
-
-@OrbisInputObject()
-export class StringFilter {
-
-    @OrbisField({nullable: true})
-    equals?: string;
-
-    @OrbisField({nullable: true})
-    not?: string;
-
-    @OrbisField(() => [String], {nullable: true})
-    in?: string[];
-
-    @OrbisField(() => [String], {nullable: true})
-    notIn?: string[];
-
-    @OrbisField({nullable: true})
-    lt?: string;
-
-    @OrbisField({nullable: true})
-    lte?: string;
-
-    @OrbisField({nullable: true})
-    gt?: string;
-
-    @OrbisField({nullable: true})
-    gte?: string;
-
-    @OrbisField({nullable: true})
+export interface StringFilter extends Filter<string> {
     contains?: string;
-
-    @OrbisField({nullable: true})
     startsWith?: string;
-
-    @OrbisField({nullable: true})
     endsWith?: string;
 }
 
-@OrbisInputObject()
-export class DateTimeFilter {
+export type DateTimeFilter = Filter<Date>;
 
-    @OrbisField({nullable: true})
-    equals?: Date;
-
-    @OrbisField({nullable: true})
-    not?: Date;
-
-    @OrbisField(() => [Date], {nullable: true})
-    in?: Date[];
-
-    @OrbisField(() => [Date], {nullable: true})
-    notIn?: Date[];
-
-    @OrbisField({nullable: true})
-    lt?: Date;
-
-    @OrbisField({nullable: true})
-    lte?: Date;
-
-    @OrbisField({nullable: true})
-    gt?: Date;
-
-    @OrbisField({nullable: true})
-    gte?: Date;
+export interface EnumFilter {
+    equals?: any;
+    not?: any;
+    in?: any[];
+    noIn?: any[];
 }
 
-@OrbisObject()
-export class ListInfo {
-
-    @OrbisField({nullable: false})
+export interface ListInfo {
     count: number;
 }
+
+export const registerOrbisTypes = (orbis: Orbis) => {
+    orbis.registerScalarType(GraphQLDate);
+    orbis.registerScalarType(GraphQLTime);
+    orbis.registerScalarType(GraphQLDateTime);
+
+    registerEnumType({
+        name: 'OrderByArg',
+        members: OrderByArg
+    });
+
+    @orbis.InputObject()
+    class IntFilter {
+
+        @orbis.Field({nullable: true})
+        equals?: number;
+
+        @orbis.Field({nullable: true})
+        not?: number;
+
+        @orbis.Field(() => [Number], {nullable: true})
+        in?: number[];
+
+        @orbis.Field(() => [Number], {nullable: true})
+        notIn?: number[];
+
+        @orbis.Field({nullable: true})
+        lt?: number;
+
+        @orbis.Field({nullable: true})
+        lte?: number;
+
+        @orbis.Field({nullable: true})
+        gt?: number;
+
+        @orbis.Field({nullable: true})
+        gte?: number;
+    }
+
+    @orbis.InputObject()
+    class FloatFilter {
+
+        @orbis.Field({float: true, nullable: true})
+        equals?: number;
+
+        @orbis.Field({float: true, nullable: true})
+        not?: number;
+
+        @orbis.Field(() => [Number], {float: true, nullable: true})
+        in?: number[];
+
+        @orbis.Field(() => [Number], {float: true, nullable: true})
+        notIn?: number[];
+
+        @orbis.Field({float: true, nullable: true})
+        lt?: number;
+
+        @orbis.Field({float: true, nullable: true})
+        lte?: number;
+
+        @orbis.Field({float: true, nullable: true})
+        gt?: number;
+
+        @orbis.Field({float: true, nullable: true})
+        gte?: number;
+    }
+
+    @orbis.InputObject()
+    class StringFilter {
+
+        @orbis.Field({nullable: true})
+        equals?: string;
+
+        @orbis.Field({nullable: true})
+        not?: string;
+
+        @orbis.Field(() => [String], {nullable: true})
+        in?: string[];
+
+        @orbis.Field(() => [String], {nullable: true})
+        notIn?: string[];
+
+        @orbis.Field({nullable: true})
+        lt?: string;
+
+        @orbis.Field({nullable: true})
+        lte?: string;
+
+        @orbis.Field({nullable: true})
+        gt?: string;
+
+        @orbis.Field({nullable: true})
+        gte?: string;
+
+        @orbis.Field({nullable: true})
+        contains?: string;
+
+        @orbis.Field({nullable: true})
+        startsWith?: string;
+
+        @orbis.Field({nullable: true})
+        endsWith?: string;
+    }
+
+    @orbis.InputObject()
+    class DateTimeFilter {
+
+        @orbis.Field({nullable: true})
+        equals?: Date;
+
+        @orbis.Field({nullable: true})
+        not?: Date;
+
+        @orbis.Field(() => [Date], {nullable: true})
+        in?: Date[];
+
+        @orbis.Field(() => [Date], {nullable: true})
+        notIn?: Date[];
+
+        @orbis.Field({nullable: true})
+        lt?: Date;
+
+        @orbis.Field({nullable: true})
+        lte?: Date;
+
+        @orbis.Field({nullable: true})
+        gt?: Date;
+
+        @orbis.Field({nullable: true})
+        gte?: Date;
+    }
+
+    @orbis.Object()
+    class ListInfo {
+
+        @orbis.Field({nullable: false})
+        count: number;
+    }
+
+    // Hack to ignore "X is declared but never used." errors
+    dummy(
+        IntFilter,
+        FloatFilter,
+        StringFilter,
+        DateTimeFilter,
+        ListInfo
+    );
+};
+
+const dummy = (..._args: unknown[]) => undefined;
