@@ -7,6 +7,7 @@ import {generateYupSchemas} from './schema';
 import {generateNexusInputObjects} from './inputObjects';
 import {generateNexusQueries} from './queries';
 import {generateNexusMutations} from './mutations';
+import {registerOrbisTypes} from './types';
 
 export interface OrbisPluginOptions extends OrbisBaseOptions {
     query?: EntityQueryMetadata;
@@ -25,6 +26,9 @@ export const orbisPlugin = (options: OrbisPluginOptions = {}) => {
             create: options.create
         }
     });
+
+    // Register types included with Orbis
+    registerOrbisTypes(orbis);
 
     // Generate Yup schemas
     generateYupSchemas(orbis);
