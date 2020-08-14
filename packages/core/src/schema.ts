@@ -90,7 +90,7 @@ export const generateYupSchema = (orbis: Orbis, typeName: string, schema: yup.Ob
             }
 
             let type = resolveFieldType(field);
-            let fieldShape: YupCommonSchema<any> = null;
+            let fieldShape: YupCommonSchema<unknown> = null;
             let isArray = false;
 
             if (Array.isArray(type)) {

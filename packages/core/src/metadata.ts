@@ -27,7 +27,7 @@ export interface Objects {
 }
 
 export interface ObjectMetadata<ObjectType> {
-    implements: Constructor<any>[];
+    implements: Constructor<unknown>[];
     schema?: SchemaFunction<ObjectType>;
 }
 
@@ -61,7 +61,7 @@ export interface EntityMutationMetadata {
     deleteMany?: boolean;
 }
 
-export type EntityCreateMetadata<Entity = any> = {
+export type EntityCreateMetadata<Entity = unknown> = {
     [key in keyof Entity]?: Entity[key] | ((values: Partial<Entity>) => Entity[key]);
 };
 
@@ -84,7 +84,7 @@ export interface FieldMetadata {
     relation?: RelationMetadataArgs;
 }
 
-export type Type = Constructor<any> | Constructor<any>[] | Enum;
+export type Type = Constructor<unknown> | Constructor<unknown>[] | Enum;
 export type TypeFunction = () => Type;
 
 /* Schemas */

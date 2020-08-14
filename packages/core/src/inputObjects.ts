@@ -7,7 +7,7 @@ import {EntityMetadata} from './metadata';
 import {resolveFieldType, generateNexusFields, generateNexusField} from './fields';
 import {isGeneratedField, Constructor} from './util';
 
-export const registerInputObjectType = (target: Constructor<any>, options: OrbisBaseOptions = {}) => {
+export const registerInputObjectType = (target: Constructor<unknown>, options: OrbisBaseOptions = {}) => {
     const orbis = getOrbis(options);
 
     // Generate input object type
@@ -65,7 +65,7 @@ export const generateNexusInputObjects = (orbis: Orbis, Type: NexusObjectTypeDef
     }
 };
 
-export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<any>, typeName: string) => {
+export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string) => {
     const name = `${typeName}WhereInput`;
 
     return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
@@ -187,7 +187,7 @@ export const generateNexusEnumFilter = (orbis: Orbis, enumTypeName: string) => {
     }));
 };
 
-export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructor<any>, typeName: string) => {
+export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string) => {
     const name = `${typeName}OrderByInput`;
 
     return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
@@ -239,7 +239,7 @@ export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructo
     }));
 };
 
-export const generateNexusMutationInputObject = (orbis: Orbis, target: Constructor<any>, typeName: string, isUpdate: boolean = false) => {
+export const generateNexusMutationInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string, isUpdate: boolean = false) => {
     const name = isUpdate ? `${typeName}UpdateInput` : `${typeName}CreateInput`;
 
     return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({

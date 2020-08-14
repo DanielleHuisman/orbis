@@ -5,6 +5,7 @@ import {registerField, OrbisField, OrbisFieldArguments, OrbisFieldOptions} from 
 import {registerInterfaceType, OrbisInterface, OrbisInterfaceOptions} from './interfaces';
 import {registerInputObjectType, OrbisInputObject} from './inputObjects';
 import {OrbisMetadata, GlobalEntityMetadata} from './metadata';
+import {OrbisModule} from './module';
 import {CreateOneArguments, UpdateOneArguments, DeleteOneArguments, DeleteManyArguments} from './mutations';
 import {registerObjectType, OrbisObject, OrbisObjectOptions} from './objects';
 import {FindOneArguments, FindOneOptions, FindFirstArguments, FindManyArguments} from './queries';
@@ -26,7 +27,8 @@ export interface OrbisBaseOptions {
 export class Orbis {
     private options: OrbisOptions = {};
     private metadata: OrbisMetadata = new OrbisMetadata();
-    private repositories: {[k: string]: Repository<any>} = {};
+    private repositories: {[k: string]: Repository<unknown>} = {};
+    private modules: OrbisModule<unknown>[] = [];
 
     private currentManager: EntityManager = null;
 
@@ -38,7 +40,7 @@ export class Orbis {
         return this.options;
     }
 
-    getOption(name: keyof OrbisOptions, defaultValue?: any) {
+    getOption<T extends keyof OrbisOptions>(name: T, defaultValue?: OrbisOptions[T]) {
         return this.options[name] === undefined ? defaultValue : this.options[name];
     }
 
@@ -64,6 +66,22 @@ export class Orbis {
         return this.metadata;
     }
 
+    getModules() {
+        return this.modules;
+    }
+
+    addModule(module: OrbisModule<unknown>) {
+        this.modules.push(module);
+
+        this.merge(module.getOrbis());
+    }
+
+    addModules(modules: OrbisModule<unknown>[]) {
+        for (const module of modules) {
+            this.addModule(module);
+        }
+    }
+
     registerScalarType(options: OrbisScalarOptions) {
         return registerScalarType({
             ...options,
@@ -78,21 +96,21 @@ export class Orbis {
         });
     }
 
-    registerInterfaceType<InterfaceType>(target: Constructor<any>, options: OrbisInterfaceOptions<InterfaceType> = {}) {
+    registerInterfaceType<InterfaceType>(target: Constructor<unknown>, options: OrbisInterfaceOptions<InterfaceType> = {}) {
         return registerInterfaceType(target, {
             ...options,
             orbis: this
         });
     }
 
-    registerObjectType<ObjectType>(target: Constructor<any>, options: OrbisObjectOptions<ObjectType> = {}) {
+    registerObjectType<ObjectType>(target: Constructor<unknown>, options: OrbisObjectOptions<ObjectType> = {}) {
         return registerObjectType(target, {
             ...options,
             orbis: this
         });
     }
 
-    registerInputObjectType(target: Constructor<any>, options: OrbisBaseOptions = {}) {
+    registerInputObjectType(target: Constructor<unknown>, options: OrbisBaseOptions = {}) {
         return registerInputObjectType(target, {
             ...options,
             orbis: this
@@ -106,7 +124,7 @@ export class Orbis {
         });
     }
 
-    registerField(target: Constructor<any>, propertyName: string, options: OrbisFieldOptions) {
+    registerField(target: Constructor<unknown>, propertyName: string, options: OrbisFieldOptions) {
         return registerField(target, propertyName, {
             ...options,
             orbis: this

@@ -17,7 +17,7 @@ export interface OrbisInterfaceOptions<InterfaceType> extends OrbisBaseOptions {
     scope?: (context: any) => any;
 }
 
-export const registerInterfaceType = <InterfaceType>(target: Constructor<any>, options: OrbisInterfaceOptions<InterfaceType> = {}) => {
+export const registerInterfaceType = <InterfaceType>(target: Constructor<unknown>, options: OrbisInterfaceOptions<InterfaceType> = {}) => {
     const orbis = getOrbis(options);
 
     // Generate interface type

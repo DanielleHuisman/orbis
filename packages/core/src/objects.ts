@@ -8,7 +8,7 @@ import {generateNexusFields} from './fields';
 import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
 export interface OrbisObjectOptions<ObjectType> extends OrbisBaseOptions {
-    implements?: Constructor<any> | Constructor<any>[];
+    implements?: Constructor<unknown> | Constructor<unknown>[];
     schema?: SchemaFunction<Omit<ObjectType, keyof BaseEntity>>;
     query?: EntityQueryMetadata;
     mutation?: EntityMutationMetadata;
@@ -16,7 +16,7 @@ export interface OrbisObjectOptions<ObjectType> extends OrbisBaseOptions {
     scope?: (context: any) => any;
 }
 
-export const registerObjectType = <ObjectType>(target: Constructor<any>, options: OrbisObjectOptions<ObjectType> = {}) => {
+export const registerObjectType = <ObjectType>(target: Constructor<unknown>, options: OrbisObjectOptions<ObjectType> = {}) => {
     const orbis = getOrbis(options);
 
     // Generate object type

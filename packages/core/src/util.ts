@@ -14,12 +14,12 @@ export type Enum = {
 
 export type Relation<Type> = Promise<Type> | Type;
 
-export const hasPrototype = (obj: any, prototype: Constructor<any>) => {
+export const hasPrototype = (obj: unknown, prototype: Constructor<unknown>) => {
     const p = Object.getPrototypeOf(obj);
     return p === prototype || (p && hasPrototype(p, prototype));
 };
 
-export const fixNullPrototypes = (data: any) => {
+export const fixNullPrototypes = (data: unknown) => {
     for (const value of Object.values(data)) {
         // @ts-ignore: TypeScript doesn't allow __proto__ to be accessed
         if (typeof value === 'object' && value && value.__proto__ === undefined) {
@@ -47,7 +47,7 @@ export const shouldGenerateField = (orbis: Orbis, typeName: string, type: 'query
     return true;
 };
 
-export const isEntity = (target: Constructor<any>) =>
+export const isEntity = (target: Constructor<unknown>) =>
     hasPrototype(target, BaseEntity) || getMetadataArgsStorage().tables.some((table) => table.target === target);
 
 export const isGeneratedField = (field: FieldMetadata) => {

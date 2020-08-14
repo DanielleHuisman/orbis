@@ -4,6 +4,7 @@ export * from './fields';
 export * from './inputObjects';
 export * from './interfaces';
 export * from './metadata';
+export * from './module';
 export * from './mutations';
 export * from './objects';
 export * from './orbis';

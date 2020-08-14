@@ -28,7 +28,7 @@ export interface OrbisFieldOptions extends OrbisBaseOptions {
 
 export type OrbisFieldArguments = [] | [TypeFunction | OrbisFieldOptions] | [TypeFunction, OrbisFieldOptions];
 
-export const registerField = (target: Constructor<any>, propertyName: string, options: OrbisFieldOptions) => {
+export const registerField = (target: Constructor<unknown>, propertyName: string, options: OrbisFieldOptions) => {
     const orbis = getOrbis(options);
 
     // Validate type
@@ -81,7 +81,7 @@ export const OrbisField = (...args: OrbisFieldArguments): PropertyDecorator => (
 
 
     // Attempt to find field type from metadata
-    const target: Constructor<any> = targetObj.constructor;
+    const target: Constructor<unknown> = targetObj.constructor;
     const fieldType = Reflect.getMetadata('design:type', targetObj, propertyName);
 
     // Use field type from metadata if none is provided
@@ -116,7 +116,7 @@ const addField = (
 
 export const generateNexusFields = (
     orbis: Orbis,
-    target: Constructor<any>,
+    target: Constructor<unknown>,
     t: InputDefinitionBlock<string> | OutputDefinitionBlock<string>,
     overrideConfig?: CommonFieldConfig
 ) => {
@@ -148,7 +148,7 @@ export const generateNexusField = (
 ) => {
     let type = resolveFieldType(field);
 
-    const config: ScalarInputFieldConfig<any> | OutputScalarConfig<string, string> = {
+    const config: ScalarInputFieldConfig<unknown> | OutputScalarConfig<string, string> = {
         nullable: field.nullable,
         ...overrideConfig
     };
@@ -174,15 +174,15 @@ export const generateNexusField = (
     }
 
     if (type === Boolean) {
-        t.boolean(fieldName, config);
+        t.boolean(fieldName, config as ScalarInputFieldConfig<boolean>);
     } else if (type === Number) {
         if (field.float) {
-            t.float(fieldName, config);
+            t.float(fieldName, config as ScalarInputFieldConfig<number>);
         } else {
-            t.int(fieldName, config);
+            t.int(fieldName, config as ScalarInputFieldConfig<number>);
         }
     } else if (type === String) {
-        t.string(fieldName, config);
+        t.string(fieldName, config as ScalarInputFieldConfig<string>);
     } else if (type === Date) {
         if (field.column && field.column.options.type) {
             const columnType = field.column.options.type.toString();
