@@ -25,5 +25,9 @@ export abstract class OrbisModule<Options> {
         };
     }
 
+    abstract getName(): string;
+
+    abstract getProvidedNames(): string[];
+
     abstract getOrbis(): Orbis;
 }

@@ -1,0 +1,44 @@
+{
+    "name": "@orbis-framework/email",
+    "description": "Abstract email module for Orbis.",
+    "version": "0.1.5",
+    "license": "MIT",
+    "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DanielHuisman/orbis.git",
+        "directory": "packages/email"
+    },
+    "keywords": [
+        "orbis",
+        "graphql",
+        "server",
+        "framework",
+        "email"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "LICENSE.md",
+        "README.md",
+        "package.json"
+    ],
+    "scripts": {
+        "lint": "eslint src/**/*.ts",
+        "clean": "rimraf dist",
+        "build": "yarn run clean && yarn run lint && yarn run build:ts",
+        "build:ts": "tsc",
+        "prepublishOnly": "yarn run build",
+        "dev": "tsc --watch"
+    },
+    "peerDependencies": {
+        "@orbis-framework/core": ">=0.0.1"
+    },
+    "devDependencies": {
+        "@orbis-framework/core": "^0.1.5"
+    }
+}

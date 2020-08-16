@@ -66,8 +66,16 @@ export class Orbis {
         return this.metadata;
     }
 
+    hasModule(name: string) {
+        return this.modules.some((module) => module.getName() === name || module.getProvidedNames().includes(name));
+    }
+
     getModules() {
         return this.modules;
+    }
+
+    getModule(name: string) {
+        return this.modules.find((module) => module.getName() === name || module.getProvidedNames().includes(name));
     }
 
     addModule(module: OrbisModule<unknown>) {

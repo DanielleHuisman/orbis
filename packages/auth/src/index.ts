@@ -11,6 +11,14 @@ export interface OrbisAuthOptions {
 
 export class OrbisAuth extends OrbisModule<OrbisAuthOptions> {
 
+    getName() {
+        return 'auth';
+    }
+
+    getProvidedNames() {
+        return [];
+    }
+
     getOrbis() {
         return orbis;
     }
