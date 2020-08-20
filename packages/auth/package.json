@@ -40,6 +40,16 @@
         "@orbis-framework/core": ">=0.0.1",
         "typeorm": ">=0.2.23"
     },
+    "dependencies": {
+        "@types/bcrypt": "^3.0.0",
+        "@types/jsonwebtoken": "^8.5.0",
+        "@types/randomstring": "^1.1.6",
+        "bcrypt": "^5.0.0",
+        "google-auth-library": "^6.0.6",
+        "googleapis": "^59.0.0",
+        "jsonwebtoken": "^8.5.1",
+        "randomstring": "^1.1.5"
+    },
     "devDependencies": {
         "@orbis-framework/core": "^0.1.5",
         "typeorm": "^0.2.25"

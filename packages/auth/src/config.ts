@@ -8,3 +8,5 @@ export const getUserType = () => userType;
 export const setUserType = (type: Constructor<BaseUser>) => {
     userType = type;
 };
+
+export const DEFAULT_BCRYPT_ROUNDS = 13;

@@ -38,6 +38,10 @@
     "peerDependencies": {
         "@orbis-framework/core": ">=0.0.1"
     },
+    "dependencies": {
+        "@types/email-templates": "^7.1.0",
+        "email-templates": "^7.1.0"
+    },
     "devDependencies": {
         "@orbis-framework/core": "^0.1.5"
     }

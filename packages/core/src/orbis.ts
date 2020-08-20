@@ -74,8 +74,8 @@ export class Orbis {
         return this.modules;
     }
 
-    getModule(name: string) {
-        return this.modules.find((module) => module.getName() === name || module.getProvidedNames().includes(name));
+    getModule<ModuleType extends OrbisModule<unknown>>(name: string) {
+        return this.modules.find((module) => module.getName() === name || module.getProvidedNames().includes(name)) as ModuleType;
     }
 
     addModule(module: OrbisModule<unknown>) {

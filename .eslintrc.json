@@ -17,16 +17,29 @@
         "max-len": ["error", 160],
         "new-cap": "off",
         "no-invalid-this": "off",
+        "no-warning-comments": "warn",
         "padded-blocks": "off",
         "require-jsdoc": "off",
+        "semi": "off",
 
         "@typescript-eslint/ban-ts-comment": ["error", {
             "ts-ignore": "allow-with-description"
         }],
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/member-delimiter-style": ["error", {
+            "multiline": {
+                "delimiter": "semi",
+                "requireLast": true
+            },
+            "singleline": {
+                "delimiter": "semi",
+                "requireLast": false
+            }
+        }],
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/no-unused-vars": ["warn", {
             "argsIgnorePattern": "^_"
-        }]
+        }],
+        "@typescript-eslint/semi": ["error"]
     }
 }
