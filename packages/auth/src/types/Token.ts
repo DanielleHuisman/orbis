@@ -104,8 +104,7 @@ export const generateTypes = (orbis: Orbis) => {
                                 },
                                 locals: {
                                     user,
-                                    // TODO: this URL should be fully customizable
-                                    url: `${options.externalUrl}/verify/${token.token}`
+                                    url: options.urls.prefix(options.urls.verify ? options.urls.verify(token.token) : `/verify/${token.token}`)
                                 }
                             });
 
@@ -152,8 +151,7 @@ export const generateTypes = (orbis: Orbis) => {
                                 },
                                 locals: {
                                     user,
-                                    // TODO: this URL should be fully customizable
-                                    url: `${options.externalUrl}/reset/${token.token}`
+                                    url: options.urls.prefix(options.urls.reset ? options.urls.reset(token.token) : `/reset/${token.token}`)
                                 }
                             });
 

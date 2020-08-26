@@ -19,8 +19,12 @@ export interface OrbisAuthOptions {
         audience: string;
         expiresIn: number;
     };
+    urls: {
+        prefix: (url: string) => string;
+        verify?: (token: string) => string;
+        reset?: (token: string) => string;
+    };
     createUser: (response: ProviderResponse) => Promise<BaseUser>;
-    externalUrl: string;
 }
 
 export class OrbisAuth extends OrbisModule<OrbisAuthOptions> {

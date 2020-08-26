@@ -19,8 +19,6 @@ export const generateTypes = (orbis: Orbis) => ({
                 return;
             }
 
-            const constructRedirectUri = (redirectUri: string) => redirectUri.startsWith('/') ? `${options.externalUrl}${redirectUri}` : redirectUri;
-
             interface OAuthAuthorizeArgs {
                 type: ProviderType;
                 redirectUri: string;
@@ -42,7 +40,7 @@ export const generateTypes = (orbis: Orbis) => ({
                     }
 
                     // Construct full redirect URI
-                    const fullRedirectUri = constructRedirectUri(args.redirectUri);
+                    const fullRedirectUri = options.urls.prefix(args.redirectUri);
 
                     // Generate authorization URL
                     return providers[args.type].authorize(fullRedirectUri);
@@ -80,7 +78,7 @@ export const generateTypes = (orbis: Orbis) => ({
                         }
 
                         // Construct full redirect URI
-                        const fullRedirectUri = constructRedirectUri(args.redirectUri);
+                        const fullRedirectUri = options.urls.prefix(args.redirectUri);
 
                         // Authenticate with provider
                         const response = await providers[args.type].authenticate(fullRedirectUri, args.code);
