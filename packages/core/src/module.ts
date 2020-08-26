@@ -1,3 +1,4 @@
+import {TypeDefs} from './metadata';
 import {Orbis} from './orbis';
 
 export abstract class OrbisModule<Options> {
@@ -30,4 +31,6 @@ export abstract class OrbisModule<Options> {
     abstract getProvidedNames(): string[];
 
     abstract getOrbis(): Orbis;
+
+    abstract getTypes(orbis: Orbis): TypeDefs;
 }

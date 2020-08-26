@@ -1,8 +1,9 @@
-import {OrbisModule} from '@orbis-framework/core';
+import {Orbis, OrbisModule} from '@orbis-framework/core';
 
 import {orbis} from './orbis';
 import {BaseUser} from './entities';
 import {ProviderResponse} from './providers';
+import {generateTypes} from './types';
 
 export interface OrbisAuthOptions {
     providers?: {
@@ -34,5 +35,9 @@ export class OrbisAuth extends OrbisModule<OrbisAuthOptions> {
 
     getOrbis() {
         return orbis;
+    }
+
+    getTypes(orbis: Orbis) {
+        return generateTypes(orbis);
     }
 }

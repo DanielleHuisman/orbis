@@ -42,12 +42,20 @@ export const orbisPlugin = (options: OrbisPluginOptions = {}) => {
         generateNexusMutations(orbis, type, entity);
     }
 
+    // Merge types
+    const types = orbis.getModules().reduce(
+        (prev, module) => prev.concat(
+            Object.values(module.getTypes(orbis))
+        ),
+        Object.values(orbis.getMetadata().getTypes())
+    );
+
     // Return Nexus plugin
     return plugin({
         name: 'orbis-plugin',
         onInstall: () => {
             return {
-                types: Object.values(orbis.getMetadata().getTypes())
+                types
             };
         }
     });
