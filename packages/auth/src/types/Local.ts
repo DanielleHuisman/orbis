@@ -39,7 +39,7 @@ export const generateTypes = (orbis: Orbis) => {
                 const options = orbis.getModule<OrbisAuth>('auth').getOptions();
 
                 // Check if the local provider is enabled
-                if (options.providers?.local ?? true) {
+                if (!(options.providers?.local ?? true)) {
                     return;
                 }
 
