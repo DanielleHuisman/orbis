@@ -52,8 +52,7 @@ export const generateTypes = (orbis: Orbis) => {
                     };
                 }
 
-                t.field('register', {
-                    type: 'User',
+                t.boolean('register', {
                     args: {
                         data: arg({
                             type: RegisterInput,
@@ -115,7 +114,7 @@ export const generateTypes = (orbis: Orbis) => {
                             // Create email verification token
                             await generateToken(orbis, provider, TokenType.VERIFY_EMAIL);
 
-                            return user;
+                            return true;
                         });
                     }
                 });
