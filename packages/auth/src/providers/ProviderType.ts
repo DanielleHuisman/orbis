@@ -1,3 +1,5 @@
+import {NexusInputObjectTypeConfig} from '@nexus/schema/dist/definitions/inputObjectType';
+
 import {Provider} from '../entities';
 
 // TODO: consider moving createUser to provider to allow easy data typing for the authentication response
@@ -17,10 +19,17 @@ export abstract class ProviderType {
 
 export const PROVIDER_TYPE_LOCAL = 'local';
 
+export interface ProviderLocalOptions {
+    extendRegisterInput?: NexusInputObjectTypeConfig<string>['definition'];
+}
+
 export class ProviderLocal extends ProviderType {
 
-    constructor() {
+    options: ProviderLocalOptions;
+
+    constructor(options: ProviderLocalOptions = {}) {
         super(PROVIDER_TYPE_LOCAL);
+        this.options = options;
     }
 }
 

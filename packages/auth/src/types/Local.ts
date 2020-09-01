@@ -24,6 +24,20 @@ export const generateTypes = (orbis: Orbis) => {
             t.string('passwordRepeat', {
                 nullable: false
             });
+
+            // Get options
+            const options = orbis.getModule<OrbisAuth>('auth').getOptions();
+
+            // Find local providers
+            const provider = options.providers.find((provider) => provider instanceof ProviderLocal);
+            if (!provider || !(provider instanceof ProviderLocal)) {
+                return;
+            }
+
+            // Extend the input object type
+            if (provider.options.extendRegisterInput) {
+                provider.options.extendRegisterInput(t);
+            }
         }
     });
 
