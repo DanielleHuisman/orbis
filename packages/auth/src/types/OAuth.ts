@@ -1,4 +1,4 @@
-import {extendType, arg, stringArg} from '@nexus/schema';
+import {extendType, stringArg} from '@nexus/schema';
 import {Orbis} from '@orbis-framework/core';
 
 import {createAccessToken, AuthContext} from '../authentication';
@@ -61,8 +61,7 @@ export const generateTypes = (orbis: Orbis) => ({
             t.field('oauthAuthenticate', {
                 type: 'AccessToken',
                 args: {
-                    type: arg({
-                        type: 'ProviderType',
+                    type: stringArg({
                         nullable: false
                     }),
                     redirectUri: stringArg({
