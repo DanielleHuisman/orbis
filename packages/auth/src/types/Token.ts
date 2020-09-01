@@ -5,8 +5,9 @@ import moment from 'moment';
 import randomstring from 'randomstring';
 
 import {DEFAULT_BCRYPT_ROUNDS} from '../config';
-import {Provider, ProviderType, Token, TokenType} from '../entities';
+import {Provider, Token, TokenType} from '../entities';
 import {OrbisAuth} from '../module';
+import {PROVIDER_TYPE_LOCAL} from '../providers';
 
 export const generateToken = async (orbis: Orbis, provider: Provider, type: TokenType, hoursValid: number = 24): Promise<Token> => {
     // Delete old tokens for this provider of same type
@@ -76,7 +77,7 @@ export const generateTypes = (orbis: Orbis) => {
                             const provider = await orbis.findFirst(Provider, {
                                 where: {
                                     type: {
-                                        equals: ProviderType.LOCAL
+                                        equals: PROVIDER_TYPE_LOCAL
                                     },
                                     identifier: {
                                         equals: args.email
@@ -125,7 +126,7 @@ export const generateTypes = (orbis: Orbis) => {
                             const provider = await orbis.findFirst(Provider, {
                                 where: {
                                     type: {
-                                        equals: ProviderType.LOCAL
+                                        equals: PROVIDER_TYPE_LOCAL
                                     },
                                     identifier: {
                                         equals: args.email
