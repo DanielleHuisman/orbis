@@ -3,9 +3,9 @@ import {Orbis} from '@orbis-framework/core';
 
 import {createAccessToken, AuthContext} from '../authentication';
 import {getUserType} from '../config';
-import {BaseUser, Provider, ProviderType} from '../entities';
+import {BaseUser, Provider} from '../entities';
 import {OrbisAuth} from '../module';
-import {providers} from '../providers';
+import {ProviderTypeOAuth} from '../providers';
 
 export const generateTypes = (orbis: Orbis) => ({
     MutationAuthOAuth: extendType({
@@ -14,20 +14,22 @@ export const generateTypes = (orbis: Orbis) => ({
             // Get options
             const options = orbis.getModule<OrbisAuth>('auth').getOptions();
 
+            // Find OAuth providers
+            const providers = options.providers.filter((provider) => provider instanceof ProviderTypeOAuth);
+
             // Check if any OAuth provider are enabled
-            if ((options.providers?.oauth ?? []).length === 0) {
+            if (providers.length === 0) {
                 return;
             }
 
             interface OAuthAuthorizeArgs {
-                type: ProviderType;
+                type: string;
                 redirectUri: string;
             }
 
             t.string('oauthAuthorize', {
                 args: {
-                    type: arg({
-                        type: 'ProviderType',
+                    type: stringArg({
                         nullable: false
                     }),
                     redirectUri: stringArg({
@@ -35,7 +37,9 @@ export const generateTypes = (orbis: Orbis) => ({
                     })
                 },
                 async resolve(_, args: OAuthAuthorizeArgs) {
-                    if (!providers[args.type]) {
+                    // Find provider
+                    const providerType = providers.find((p) => p.getName() === args.type);
+                    if (!providerType || !(providerType instanceof ProviderTypeOAuth)) {
                         throw new Error('errors.oauth.provider.invalid');
                     }
 
@@ -43,12 +47,12 @@ export const generateTypes = (orbis: Orbis) => ({
                     const fullRedirectUri = options.urls.prefix(args.redirectUri);
 
                     // Generate authorization URL
-                    return providers[args.type].authorize(fullRedirectUri);
+                    return providerType.authorize(fullRedirectUri);
                 }
             });
 
             interface OAuthAuthenticateArgs {
-                type: ProviderType;
+                type: string;
                 redirectUri: string;
                 code: string;
                 userId?: string;
@@ -73,7 +77,9 @@ export const generateTypes = (orbis: Orbis) => ({
                 },
                 resolve(_, args: OAuthAuthenticateArgs) {
                     return orbis.transaction(async () => {
-                        if (!providers[args.type]) {
+                        // Find provider
+                        const providerType = providers.find((p) => p.getName() === args.type);
+                        if (!providerType || !(providerType instanceof ProviderTypeOAuth)) {
                             throw new Error('errors.oauth.provider.invalid');
                         }
 
@@ -81,16 +87,16 @@ export const generateTypes = (orbis: Orbis) => ({
                         const fullRedirectUri = options.urls.prefix(args.redirectUri);
 
                         // Authenticate with provider
-                        const response = await providers[args.type].authenticate(fullRedirectUri, args.code);
+                        const response = await providerType.authenticate(fullRedirectUri, args.code);
 
                         // Attempt to find existing provider
                         const provider = await orbis.findFirst(Provider, {
                             where: {
                                 type: {
-                                    equals: response.type
+                                    equals: providerType.getName()
                                 },
                                 identifier: {
-                                    equals: response.identifier
+                                    equals: response.provider.identifier
                                 }
                             },
                             relations: ['user']
@@ -109,16 +115,20 @@ export const generateTypes = (orbis: Orbis) => ({
                                 });
                             } else {
                                 // Create user
-                                user = await options.createUser(response);
+                                user = await options.createUser({
+                                    ...response,
+                                    provider: {
+                                        ...response.provider,
+                                        type: providerType.getName()
+                                    }
+                                });
                             }
 
                             // Create provider
                             await orbis.createOne(Provider, {
                                 data: {
-                                    type: response.type,
-                                    identifier: response.identifier,
-                                    credentials: response.credentials,
-                                    email: response.email,
+                                    type: providerType.getName(),
+                                    ...response.provider,
                                     isVerified: true,
                                     user: {
                                         connect: {
@@ -144,14 +154,13 @@ export const generateTypes = (orbis: Orbis) => ({
             });
 
             interface OAuthUnlinkArgs {
-                type: ProviderType;
+                type: string;
             }
 
             t.field('oauthUnlink', {
                 type: 'Provider',
                 args: {
-                    type: arg({
-                        type: 'ProviderType',
+                    type: stringArg({
                         nullable: false
                     })
                 },
@@ -161,7 +170,9 @@ export const generateTypes = (orbis: Orbis) => ({
                             throw new Error('errors.unauthenticated');
                         }
 
-                        if (!providers[args.type]) {
+                        // Find provider
+                        const providerType = providers.find((p) => p.getName() === args.type);
+                        if (!providerType) {
                             throw new Error('errors.oauth.provider.invalid');
                         }
 

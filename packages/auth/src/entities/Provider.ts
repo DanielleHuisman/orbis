@@ -6,16 +6,6 @@ import {orbis} from '../orbis';
 
 import {BaseUser} from './BaseUser';
 
-export enum ProviderType {
-    LOCAL = 'LOCAL',
-    GOOGLE = 'GOOGLE'
-}
-
-orbis.registerEnumType({
-    name: 'ProviderType',
-    members: ProviderType
-});
-
 @orbis.Object()
 @Entity()
 export class Provider {
@@ -24,9 +14,9 @@ export class Provider {
     @PrimaryColumn()
     id: string;
 
-    @orbis.Field(() => ProviderType)
-    @Column({type: 'enum', enum: ProviderType})
-    type: ProviderType;
+    @orbis.Field()
+    @Column({type: 'varchar', length: 255})
+    type: string;
 
     @orbis.Field({graphql: false})
     @Column({type: 'varchar', length: 255})

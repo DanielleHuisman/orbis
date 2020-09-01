@@ -4,8 +4,9 @@ import bcrypt from 'bcrypt';
 
 import {createAccessToken, AuthContext} from '../authentication';
 import {DEFAULT_BCRYPT_ROUNDS} from '../config';
-import {Provider, ProviderType, TokenType} from '../entities';
+import {Provider, TokenType} from '../entities';
 import {OrbisAuth} from '../module';
+import {PROVIDER_TYPE_LOCAL, ProviderTypeLocal} from '../providers';
 
 import {generateToken} from './Token';
 
@@ -14,9 +15,6 @@ export const generateTypes = (orbis: Orbis) => {
     const RegisterInput = inputObjectType({
         name: 'RegisterInput',
         definition(t) {
-            t.string('name', {
-                nullable: false
-            });
             t.string('email', {
                 nullable: false
             });
@@ -38,14 +36,16 @@ export const generateTypes = (orbis: Orbis) => {
                 // Get options
                 const options = orbis.getModule<OrbisAuth>('auth').getOptions();
 
+                // Find local providers
+                const providers = options.providers.filter((provider) => provider instanceof ProviderTypeLocal);
+
                 // Check if the local provider is enabled
-                if (!(options.providers?.local ?? true)) {
+                if (providers.length === 0) {
                     return;
                 }
 
                 interface RegisterArgs {
                     data: {
-                        name: string;
                         email: string;
                         password: string;
                         passwordRepeat: string;
@@ -72,7 +72,7 @@ export const generateTypes = (orbis: Orbis) => {
                             const existingProvider = await orbis.findFirst(Provider, {
                                 where: {
                                     type: {
-                                        equals: ProviderType.LOCAL
+                                        equals: 'local'
                                     },
                                     identifier: {
                                         equals: data.email.trim()
@@ -89,17 +89,19 @@ export const generateTypes = (orbis: Orbis) => {
 
                             // Create user
                             const user = await options.createUser({
-                                type: ProviderType.LOCAL,
-                                identifier,
-                                credentials,
-                                name: data.name,
-                                email: identifier
+                                provider: {
+                                    type: PROVIDER_TYPE_LOCAL,
+                                    identifier,
+                                    credentials,
+                                    email: identifier
+                                },
+                                data
                             });
 
                             // Create provider
                             const provider = await orbis.createOne(Provider, {
                                 data: {
-                                    type: ProviderType.LOCAL,
+                                    type: PROVIDER_TYPE_LOCAL,
                                     identifier,
                                     credentials,
                                     email: identifier,
@@ -140,7 +142,7 @@ export const generateTypes = (orbis: Orbis) => {
                             const provider = await orbis.findFirst(Provider, {
                                 where: {
                                     type: {
-                                        equals: ProviderType.LOCAL
+                                        equals: PROVIDER_TYPE_LOCAL
                                     },
                                     identifier: {
                                         equals: args.email
@@ -194,7 +196,7 @@ export const generateTypes = (orbis: Orbis) => {
                                         }
                                     },
                                     type: {
-                                        equals: ProviderType.LOCAL
+                                        equals: PROVIDER_TYPE_LOCAL
                                     }
                                 }
                                 // TODO: this might be necessary
@@ -263,7 +265,7 @@ export const generateTypes = (orbis: Orbis) => {
                                         }
                                     },
                                     type: {
-                                        equals: ProviderType.LOCAL
+                                        equals: PROVIDER_TYPE_LOCAL
                                     }
                                 }
                                 // TODO: this might be necessary

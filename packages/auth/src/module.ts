@@ -2,14 +2,11 @@ import {Orbis, OrbisModule} from '@orbis-framework/core';
 
 import {orbis} from './orbis';
 import {BaseUser} from './entities';
-import {ProviderResponse} from './providers';
+import {ProviderType, CreateUserArgs} from './providers';
 import {generateTypes} from './types';
 
 export interface OrbisAuthOptions {
-    providers?: {
-        local?: boolean;
-        oauth?: string[];
-    };
+    providers: ProviderType[];
     bcrypt?: {
         rounds?: number;
     };
@@ -24,7 +21,7 @@ export interface OrbisAuthOptions {
         verify?: (token: string) => string;
         reset?: (token: string) => string;
     };
-    createUser: (response: ProviderResponse) => Promise<BaseUser>;
+    createUser: (args: CreateUserArgs) => Promise<BaseUser>;
 }
 
 export class OrbisAuth extends OrbisModule<OrbisAuthOptions> {
