@@ -6,7 +6,7 @@ import {createAccessToken, AuthContext} from '../authentication';
 import {DEFAULT_BCRYPT_ROUNDS} from '../config';
 import {Provider, TokenType} from '../entities';
 import {OrbisAuth} from '../module';
-import {PROVIDER_TYPE_LOCAL, ProviderTypeLocal} from '../providers';
+import {PROVIDER_TYPE_LOCAL, ProviderLocal} from '../providers';
 
 import {generateToken} from './Token';
 
@@ -37,7 +37,7 @@ export const generateTypes = (orbis: Orbis) => {
                 const options = orbis.getModule<OrbisAuth>('auth').getOptions();
 
                 // Find local providers
-                const providers = options.providers.filter((provider) => provider instanceof ProviderTypeLocal);
+                const providers = options.providers.filter((provider) => provider instanceof ProviderLocal);
 
                 // Check if the local provider is enabled
                 if (providers.length === 0) {

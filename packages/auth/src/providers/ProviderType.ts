@@ -1,5 +1,7 @@
 import {Provider} from '../entities';
 
+// TODO: consider moving createUser to provider to allow easy data typing for the authentication response
+
 export abstract class ProviderType {
 
     private name: string;
@@ -15,7 +17,7 @@ export abstract class ProviderType {
 
 export const PROVIDER_TYPE_LOCAL = 'local';
 
-export class ProviderTypeLocal extends ProviderType {
+export class ProviderLocal extends ProviderType {
 
     constructor() {
         super(PROVIDER_TYPE_LOCAL);

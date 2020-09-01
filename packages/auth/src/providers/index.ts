@@ -1,2 +1,2 @@
-export * from './ProviderType';
 export * from './Google';
+export * from './ProviderType';
