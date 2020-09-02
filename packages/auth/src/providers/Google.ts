@@ -3,7 +3,7 @@ import {OAuth2Client, OAuth2ClientOptions} from 'google-auth-library';
 
 import {ProviderOptions, ProviderTypeOAuth, AuthenticateResponse} from './ProviderType';
 
-export type ProviderGoogleOptions = ProviderOptions & OAuth2ClientOptions;
+export type ProviderGoogleOptions = ProviderOptions<OAuthV2.Schema$Userinfo> & OAuth2ClientOptions;
 
 export class ProviderGoogle extends ProviderTypeOAuth<ProviderGoogleOptions> {
 
@@ -32,7 +32,7 @@ export class ProviderGoogle extends ProviderTypeOAuth<ProviderGoogleOptions> {
         });
     }
 
-    async authenticate(redirectUri: string, code: string): Promise<AuthenticateResponse> {
+    async authenticate(redirectUri: string, code: string): Promise<AuthenticateResponse<OAuthV2.Schema$Userinfo>> {
         // Fetch access token
         const {tokens} = await this.auth.getToken({
             redirect_uri: redirectUri,

@@ -2,15 +2,21 @@ import {NexusInputObjectTypeConfig} from '@nexus/schema/dist/definitions/inputOb
 
 import {BaseUser, Provider} from '../entities';
 
-export type CreateUserArgs<Data = unknown> = AuthenticateResponse<Data> & {
+export type AuthenticateResponse<Data = unknown> = {
+    provider: Pick<Provider, 'identifier' | 'credentials' | 'email'>;
+    data: Data;
+};
+
+export type CreateUserArgs<Data> = AuthenticateResponse<Data> & {
     provider: Pick<Provider, 'type'>;
 };
 
-export interface ProviderOptions {
-    createUser: (args: CreateUserArgs) => Promise<BaseUser>;
+export interface ProviderOptions<Data> {
+    createUser: (args: CreateUserArgs<Data>) => Promise<BaseUser>;
 }
 
-export abstract class ProviderType<Options extends ProviderOptions = ProviderOptions> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class ProviderType<Options extends ProviderOptions<any> = ProviderOptions<any>> {
 
     private name: string;
     private options: Options;
@@ -31,7 +37,7 @@ export abstract class ProviderType<Options extends ProviderOptions = ProviderOpt
 
 export const PROVIDER_TYPE_LOCAL = 'local';
 
-export interface ProviderLocalOptions extends ProviderOptions {
+export interface ProviderLocalOptions<Data = unknown> extends ProviderOptions<Data> {
     onEmailUpdated?: (provider: Provider) => Promise<void>;
     onPasswordUpdated?: (provider: Provider) => Promise<void>;
 
@@ -45,7 +51,8 @@ export class ProviderLocal extends ProviderType<ProviderLocalOptions> {
     }
 }
 
-export abstract class ProviderTypeOAuth<Options extends ProviderOptions = ProviderOptions> extends ProviderType<Options> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class ProviderTypeOAuth<Options extends ProviderOptions<any>> extends ProviderType<Options> {
 
     constructor(name: string, options: Options) {
         super(name, options);
@@ -59,10 +66,3 @@ export abstract class ProviderTypeOAuth<Options extends ProviderOptions = Provid
 
     abstract async authenticate(redirectUri: string, code: string): Promise<AuthenticateResponse>;
 }
-
-export type AuthenticateResponse<Data = unknown> = {
-    provider: Pick<Provider, 'identifier' | 'credentials' | 'email'>;
-    data: Data;
-};
-
-
