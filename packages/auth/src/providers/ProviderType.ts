@@ -37,16 +37,16 @@ export abstract class ProviderType<Options extends ProviderOptions<any> = Provid
 
 export const PROVIDER_TYPE_LOCAL = 'local';
 
-export interface ProviderLocalOptions<Data = unknown> extends ProviderOptions<Data> {
+export interface ProviderLocalOptions<Data> extends ProviderOptions<Data> {
     onEmailUpdated?: (provider: Provider) => Promise<void>;
     onPasswordUpdated?: (provider: Provider) => Promise<void>;
 
     extendRegisterInput?: NexusInputObjectTypeConfig<string>['definition'];
 }
 
-export class ProviderLocal extends ProviderType<ProviderLocalOptions> {
+export class ProviderLocal<Data = unknown> extends ProviderType<ProviderLocalOptions<Data>> {
 
-    constructor(options: ProviderLocalOptions) {
+    constructor(options: ProviderLocalOptions<Data>) {
         super(PROVIDER_TYPE_LOCAL, options);
     }
 }
