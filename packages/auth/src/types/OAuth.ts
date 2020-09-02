@@ -114,7 +114,7 @@ export const generateTypes = (orbis: Orbis) => ({
                                 });
                             } else {
                                 // Create user
-                                user = await options.createUser({
+                                user = await providerType.getOptions().createUser({
                                     ...response,
                                     provider: {
                                         ...response.provider,

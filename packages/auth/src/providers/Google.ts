@@ -1,15 +1,17 @@
 import {google, oauth2_v2 as OAuthV2} from 'googleapis';
 import {OAuth2Client, OAuth2ClientOptions} from 'google-auth-library';
 
-import {ProviderTypeOAuth, AuthenticateResponse} from './ProviderType';
+import {ProviderOptions, ProviderTypeOAuth, AuthenticateResponse} from './ProviderType';
 
-export class ProviderGoogle extends ProviderTypeOAuth {
+export type ProviderGoogleOptions = ProviderOptions & OAuth2ClientOptions;
+
+export class ProviderGoogle extends ProviderTypeOAuth<ProviderGoogleOptions> {
 
     auth: OAuth2Client;
     oauth: OAuthV2.Oauth2;
 
-    constructor(options: OAuth2ClientOptions) {
-        super('google');
+    constructor(options: ProviderGoogleOptions) {
+        super('google', options);
 
         this.auth = new google.auth.OAuth2(options);
         this.oauth = google.oauth2({

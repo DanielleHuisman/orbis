@@ -1,42 +1,54 @@
 import {NexusInputObjectTypeConfig} from '@nexus/schema/dist/definitions/inputObjectType';
 
-import {Provider} from '../entities';
+import {BaseUser, Provider} from '../entities';
 
-// TODO: consider moving createUser to provider to allow easy data typing for the authentication response
+export type CreateUserArgs = AuthenticateResponse & {
+    provider: Pick<Provider, 'type'>;
+};
 
-export abstract class ProviderType {
+export interface ProviderOptions {
+    createUser: (args: CreateUserArgs) => Promise<BaseUser>;
+}
+
+export abstract class ProviderType<Options extends ProviderOptions = ProviderOptions> {
 
     private name: string;
+    private options: Options;
 
-    constructor(name: string) {
+    constructor(name: string, options: Options) {
         this.name = name;
+        this.options = options;
     }
 
     getName() {
         return this.name;
     }
+
+    getOptions() {
+        return this.options;
+    }
 }
 
 export const PROVIDER_TYPE_LOCAL = 'local';
 
-export interface ProviderLocalOptions {
+export interface ProviderLocalOptions extends ProviderOptions {
+    onEmailUpdated?: (provider: Provider) => Promise<void>;
+    onPasswordUpdated?: (provider: Provider) => Promise<void>;
+
     extendRegisterInput?: NexusInputObjectTypeConfig<string>['definition'];
 }
 
-export class ProviderLocal extends ProviderType {
+export class ProviderLocal extends ProviderType<ProviderLocalOptions> {
 
-    options: ProviderLocalOptions;
-
-    constructor(options: ProviderLocalOptions = {}) {
-        super(PROVIDER_TYPE_LOCAL);
-        this.options = options;
+    constructor(options: ProviderLocalOptions) {
+        super(PROVIDER_TYPE_LOCAL, options);
     }
 }
 
-export abstract class ProviderTypeOAuth extends ProviderType {
+export abstract class ProviderTypeOAuth<Options extends ProviderOptions = ProviderOptions> extends ProviderType<Options> {
 
-    constructor(name: string) {
-        super(name);
+    constructor(name: string, options: Options) {
+        super(name, options);
 
         if (this.getName() === PROVIDER_TYPE_LOCAL) {
             throw new Error(`Only the local provider type can have the name "${PROVIDER_TYPE_LOCAL}"`);
@@ -53,6 +65,4 @@ export type AuthenticateResponse<Data = unknown> = {
     data: Data;
 };
 
-export type CreateUserArgs = AuthenticateResponse & {
-    provider: Pick<Provider, 'type'>;
-};
+

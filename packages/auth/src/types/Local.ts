@@ -11,7 +11,6 @@ import {PROVIDER_TYPE_LOCAL, ProviderLocal} from '../providers';
 import {generateToken} from './Token';
 
 export const generateTypes = (orbis: Orbis) => {
-    // TODO: consider using Orbis input object definitions for this
     const RegisterInput = inputObjectType({
         name: 'RegisterInput',
         definition(t) {
@@ -28,15 +27,16 @@ export const generateTypes = (orbis: Orbis) => {
             // Get options
             const options = orbis.getModule<OrbisAuth>('auth').getOptions();
 
-            // Find local providers
+            // Find local provider
             const provider = options.providers.find((provider) => provider instanceof ProviderLocal);
             if (!provider || !(provider instanceof ProviderLocal)) {
                 return;
             }
 
             // Extend the input object type
-            if (provider.options.extendRegisterInput) {
-                provider.options.extendRegisterInput(t);
+            const providerOptions = provider.getOptions();
+            if (providerOptions.extendRegisterInput) {
+                providerOptions.extendRegisterInput(t);
             }
         }
     });
@@ -50,13 +50,14 @@ export const generateTypes = (orbis: Orbis) => {
                 // Get options
                 const options = orbis.getModule<OrbisAuth>('auth').getOptions();
 
-                // Find local providers
-                const providers = options.providers.filter((provider) => provider instanceof ProviderLocal);
-
-                // Check if the local provider is enabled
-                if (providers.length === 0) {
+                // Find local provider
+                const providerType = options.providers.find((provider) => provider instanceof ProviderLocal);
+                if (!providerType || !(providerType instanceof ProviderLocal)) {
                     return;
                 }
+
+                // Find local provider options
+                const providerOptions = providerType.getOptions();
 
                 interface RegisterArgs {
                     data: {
@@ -102,7 +103,7 @@ export const generateTypes = (orbis: Orbis) => {
                             const credentials = await bcrypt.hash(data.password, options.bcrypt?.rounds ?? DEFAULT_BCRYPT_ROUNDS);
 
                             // Create user
-                            const user = await options.createUser({
+                            const user = await providerType.getOptions().createUser({
                                 provider: {
                                     type: PROVIDER_TYPE_LOCAL,
                                     identifier,
@@ -238,6 +239,11 @@ export const generateTypes = (orbis: Orbis) => {
 
                             // TODO: send verification email
 
+                            // Handle update hook
+                            if (providerOptions.onEmailUpdated) {
+                                await providerOptions.onEmailUpdated(provider);
+                            }
+
                             return true;
                         });
                     }
@@ -271,7 +277,7 @@ export const generateTypes = (orbis: Orbis) => {
                             }
 
                             // Find the local provider
-                            const provider = await orbis.findFirst(Provider, {
+                            let provider = await orbis.findFirst(Provider, {
                                 where: {
                                     user: {
                                         id: {
@@ -291,7 +297,7 @@ export const generateTypes = (orbis: Orbis) => {
                             }
 
                             // Update the password
-                            await orbis.updateOne(Provider, {
+                            provider = await orbis.updateOne(Provider, {
                                 where: {
                                     id: provider.id
                                 },
@@ -299,6 +305,11 @@ export const generateTypes = (orbis: Orbis) => {
                                     credentials: await bcrypt.hash(args.password, options.bcrypt?.rounds ?? DEFAULT_BCRYPT_ROUNDS)
                                 }
                             });
+
+                            // Handle update hook
+                            if (providerOptions.onPasswordUpdated) {
+                                await providerOptions.onPasswordUpdated(provider);
+                            }
 
                             return true;
                         });

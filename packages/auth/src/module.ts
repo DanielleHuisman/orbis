@@ -1,8 +1,7 @@
 import {Orbis, OrbisModule} from '@orbis-framework/core';
 
 import {orbis} from './orbis';
-import {BaseUser} from './entities';
-import {ProviderType, CreateUserArgs} from './providers';
+import {ProviderType} from './providers';
 import {generateTypes} from './types';
 
 export interface OrbisAuthOptions {
@@ -21,7 +20,6 @@ export interface OrbisAuthOptions {
         verify?: (token: string) => string;
         reset?: (token: string) => string;
     };
-    createUser: (args: CreateUserArgs) => Promise<BaseUser>;
 }
 
 export class OrbisAuth extends OrbisModule<OrbisAuthOptions> {
