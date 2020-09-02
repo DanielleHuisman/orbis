@@ -2,7 +2,7 @@ import {NexusInputObjectTypeConfig} from '@nexus/schema/dist/definitions/inputOb
 
 import {BaseUser, Provider} from '../entities';
 
-export type CreateUserArgs = AuthenticateResponse & {
+export type CreateUserArgs<Data = unknown> = AuthenticateResponse<Data> & {
     provider: Pick<Provider, 'type'>;
 };
 
