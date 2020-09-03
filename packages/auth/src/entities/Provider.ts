@@ -35,6 +35,6 @@ export class Provider {
     isVerified: boolean;
 
     @orbis.Field(() => getUserType())
-    @ManyToOne(() => getUserType(), (user) => user.providers, {onDelete: 'CASCADE', lazy: true})
+    @ManyToOne(() => getUserType(), (user) => user.providers, {onDelete: 'CASCADE', lazy: true, nullable: false})
     user: Relation<BaseUser>;
 }
