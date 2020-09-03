@@ -36,7 +36,7 @@ export class Token extends BaseEntity {
     expiresAt: Date;
 
     @orbis.Field(() => Provider)
-    @ManyToOne(() => Provider, {onDelete: 'CASCADE', lazy: true})
+    @ManyToOne(() => Provider, {onDelete: 'CASCADE', lazy: true, nullable: false})
     provider: Relation<Provider>;
 
     isExpired() {
