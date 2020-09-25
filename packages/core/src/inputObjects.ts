@@ -296,10 +296,31 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
                         } else if (type === String) {
                             t.string(fieldName, config);
                         } else if (type === Date) {
-                            t.field(fieldName, {
-                                type: 'DateTime',
-                                ...config
-                            });
+                            if (field.column && field.column.options.type) {
+                                const columnType = field.column.options.type.toString();
+                                if (columnType.startsWith('timestamp') || columnType.startsWith('datetime')) {
+                                    t.field(fieldName, {
+                                        type: 'DateTime',
+                                        ...config
+                                    });
+                                } else if (columnType.startsWith('date')) {
+                                    t.field(fieldName, {
+                                        type: 'Date',
+                                        ...config
+                                    });
+                                } else if (columnType.startsWith('time')) {
+                                    t.field(fieldName, {
+                                        type: 'Time',
+                                        ...config
+                                    });
+                                }
+                            } else {
+                                // TODO: add config option, similar to float
+                                t.field(fieldName, {
+                                    type: 'DateTime',
+                                    ...config
+                                });
+                            }
                         } else if (typeof type === 'function') {
                             if (field.relation) {
                                 // Relation
