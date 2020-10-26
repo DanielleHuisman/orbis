@@ -52,13 +52,37 @@ export const registerObjectType = <ObjectType>(target: Constructor<unknown>, opt
         const singularName = firstLower(Type.name);
         const pluralName = pluralize(singularName);
 
+        // Determine which fields are columns and which are relations
+        let columns = Object.entries(orbis.getMetadata().getFields(Type.name)).filter(([_, field]) => !!field.column).map(([fieldName]) => fieldName);
+        let relations = Object.entries(orbis.getMetadata().getFields(Type.name)).filter(([_, field]) => !!field.relation).map(([fieldName]) => fieldName);
+
+        // Merge columns and relations of interfaces with this entity
+        if (options.implements) {
+            if (Array.isArray(options.implements)) {
+                for (const i of options.implements) {
+                    if (orbis.getMetadata().hasEntity(i.name)) {
+                        const e = orbis.getMetadata().getEntity(i.name);
+                        columns = columns.concat(e.columns);
+                        relations = relations.concat(e.relations);
+                    }
+                }
+            } else {
+                const i = options.implements;
+                if (orbis.getMetadata().hasEntity(i.name)) {
+                    const e = orbis.getMetadata().getEntity(i.name);
+                    columns = columns.concat(e.columns);
+                    relations = relations.concat(e.relations);
+                }
+            }
+        }
+
         // Store entity metadata
         const entity = {
             Entity: target,
             singularName,
             pluralName,
-            columns: Object.entries(orbis.getMetadata().getFields(Type.name)).filter(([_, field]) => !!field.column).map(([fieldName]) => fieldName),
-            relations: Object.entries(orbis.getMetadata().getFields(Type.name)).filter(([_, field]) => !!field.relation).map(([fieldName]) => fieldName),
+            columns,
+            relations,
             query: options.query,
             mutation: options.mutation,
             create: options.create,
