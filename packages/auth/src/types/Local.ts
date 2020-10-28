@@ -221,7 +221,7 @@ export const generateTypes = (orbis: Orbis) => {
                             }
 
                             // Find the local provider
-                            const provider = await orbis.findFirst(Provider, {
+                            let provider = await orbis.findFirst(Provider, {
                                 where: {
                                     user: {
                                         id: {
@@ -241,7 +241,7 @@ export const generateTypes = (orbis: Orbis) => {
                             }
 
                             // Update the email address
-                            await orbis.updateOne(Provider, {
+                            provider = await orbis.updateOne(Provider, {
                                 where: {
                                     id: provider.id
                                 },
