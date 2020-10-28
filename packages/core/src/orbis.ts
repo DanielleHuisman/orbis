@@ -81,7 +81,10 @@ export class Orbis {
     addModule(module: OrbisModule<unknown>) {
         this.modules.push(module);
 
-        this.merge(module.getOrbis());
+        const other = module.getOrbis();
+        if (other) {
+            this.merge(other);
+        }
     }
 
     addModules(modules: OrbisModule<unknown>[]) {
@@ -144,14 +147,14 @@ export class Orbis {
             ...options,
             orbis: this
         });
-    }
+    };
 
     Object = <ObjectType>(options: OrbisObjectOptions<ObjectType> = {}): ClassDecorator => {
         return OrbisObject({
             ...options,
             orbis: this
         });
-    }
+    };
 
     InputObject() {
         return OrbisInputObject({
@@ -181,7 +184,7 @@ export class Orbis {
             ...options,
             orbis: this
         });
-    }
+    };
 
     merge(other: Orbis) {
         // Merge options

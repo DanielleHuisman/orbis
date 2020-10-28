@@ -1,6 +1,6 @@
 {
     "name": "@orbis-framework/email",
-    "description": "Abstract email module for Orbis.",
+    "description": "Email module for Orbis.",
     "version": "0.1.5",
     "license": "MIT",
     "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
@@ -40,7 +40,8 @@
     },
     "dependencies": {
         "@types/email-templates": "^7.1.0",
-        "email-templates": "^7.1.0"
+        "email-templates": "^7.1.0",
+        "nodemailer": "^6.4.14"
     },
     "devDependencies": {
         "@orbis-framework/core": "^0.1.5"

@@ -30,7 +30,7 @@ export abstract class OrbisModule<Options> {
 
     abstract getProvidedNames(): string[];
 
-    abstract getOrbis(): Orbis;
+    abstract getOrbis(): Orbis | null;
 
     abstract getTypes(orbis: Orbis): TypeDefs;
 }
