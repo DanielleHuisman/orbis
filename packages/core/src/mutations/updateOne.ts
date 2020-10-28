@@ -58,6 +58,13 @@ export const updateEntity = async <Entity>(
     if (Object.keys(values).length > 0) {
         // Execute update query
         qb.set(values);
+
+        // Add data to query runner for subscribers
+        repository.queryRunner.data.orbis = {
+            id: repository.getId(entity),
+            values
+        };
+
         await qb.execute();
     }
 };

@@ -83,6 +83,12 @@ export const createEntity = async <Entity>(
 
     // Execute insert query
     qb.values(values);
+
+    // Add data to query runner for subscribers
+    repository.queryRunner.data.orbis = {
+        values
+    };
+
     const result = await qb.execute();
 
     // Return entity identifier

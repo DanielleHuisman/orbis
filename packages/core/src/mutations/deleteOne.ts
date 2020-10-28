@@ -24,6 +24,11 @@ export const deleteOne = async <Entity>(
     // Find entity repository
     const repository = orbis.getManager().getRepository(metadata.Entity);
 
+    // Add data to query runner for subscribers
+    repository.queryRunner.data.orbis = {
+        id: repository.getId(entity)
+    };
+
     // Delete entity
     await repository
         .createQueryBuilder(metadata.singularName)
