@@ -7,7 +7,10 @@ export interface OrbisEmailOptions {
     templates: Omit<EmailConfig, 'message' | 'transport'> & {
         message?: EmailConfig['message'];
     };
+    changeTemplate?: <T>(template: string, locals: T) => string;
 }
+
+export type Email<T> = EmailTemplates.EmailOptions<T>;
 
 export class OrbisEmail extends OrbisModule<OrbisEmailOptions> {
 
@@ -50,6 +53,12 @@ export class OrbisEmail extends OrbisModule<OrbisEmailOptions> {
     }
 
     async send<T>(email: EmailTemplates.EmailOptions<T>) {
-        return await this.templates.send(email);
+        const changeTemplate = this.getOption('changeTemplate');
+        const template = changeTemplate ? changeTemplate(email.template, email.locals) : email.template;
+
+        return await this.templates.send({
+            ...email,
+            template
+        });
     }
 }

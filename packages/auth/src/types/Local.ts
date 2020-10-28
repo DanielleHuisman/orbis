@@ -7,6 +7,7 @@ import {DEFAULT_BCRYPT_ROUNDS} from '../config';
 import {Provider, TokenType} from '../entities';
 import {OrbisAuth} from '../module';
 import {PROVIDER_TYPE_LOCAL, ProviderLocal} from '../providers';
+import {sendEmail} from '../util';
 
 import {generateToken} from './Token';
 
@@ -129,7 +130,24 @@ export const generateTypes = (orbis: Orbis) => {
                             });
 
                             // Create email verification token
-                            await generateToken(orbis, provider, TokenType.VERIFY_EMAIL);
+                            const token = await generateToken(orbis, provider, TokenType.VERIFY_EMAIL);
+
+                            // Send verification email
+                            await sendEmail(orbis, {
+                                template: `verify-email`,
+                                message: {
+                                    to: provider.email
+                                },
+                                locals: {
+                                    user,
+                                    url: options.urls.prefix(options.urls.verify ? options.urls.verify(token.token) : `/verify/${token.token}`)
+                                }
+                            });
+
+                            // Handle register hook
+                            if (providerOptions.onRegistered) {
+                                await providerOptions.onRegistered(user, provider);
+                            }
 
                             return true;
                         });
@@ -235,9 +253,20 @@ export const generateTypes = (orbis: Orbis) => {
                             });
 
                             // Create email verification token
-                            await generateToken(orbis, provider, TokenType.VERIFY_EMAIL);
+                            const token = await generateToken(orbis, provider, TokenType.VERIFY_EMAIL);
 
-                            // TODO: send verification email
+                            // Send verification email
+                            const user = await provider.user;
+                            await sendEmail(orbis, {
+                                template: `verify-email`,
+                                message: {
+                                    to: provider.email
+                                },
+                                locals: {
+                                    user,
+                                    url: options.urls.prefix(options.urls.verify ? options.urls.verify(token.token) : `/verify/${token.token}`)
+                                }
+                            });
 
                             // Handle update hook
                             if (providerOptions.onEmailUpdated) {

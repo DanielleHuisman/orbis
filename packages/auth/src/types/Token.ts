@@ -8,6 +8,7 @@ import {DEFAULT_BCRYPT_ROUNDS} from '../config';
 import {Provider, Token, TokenType} from '../entities';
 import {OrbisAuth} from '../module';
 import {PROVIDER_TYPE_LOCAL} from '../providers';
+import {sendEmail} from '../util';
 
 export const generateToken = async (orbis: Orbis, provider: Provider, type: TokenType, hoursValid: number = 24): Promise<Token> => {
     // Delete old tokens for this provider of same type
@@ -51,9 +52,6 @@ export const generateToken = async (orbis: Orbis, provider: Provider, type: Toke
 };
 
 export const generateTypes = (orbis: Orbis) => {
-    // TODO: handle email integration with @orbis-framework/email
-    const sendEmail = (_args: unknown) => new Promise((resolve) => resolve());
-
     return {
         MutationAuthToken: extendType({
             type: 'Mutation',
@@ -97,8 +95,7 @@ export const generateTypes = (orbis: Orbis) => {
 
                             // Send verification email
                             const user = await provider.user;
-                            await sendEmail({
-                                // template: `verify-email/${user.language}`,
+                            await sendEmail(orbis, {
                                 template: `verify-email`,
                                 message: {
                                     to: provider.email
@@ -144,8 +141,7 @@ export const generateTypes = (orbis: Orbis) => {
 
                             // Send reset password email
                             const user = await provider.user;
-                            await sendEmail({
-                                // template: `reset-password/${user.language}`,
+                            await sendEmail(orbis, {
                                 template: `reset-password`,
                                 message: {
                                     to: provider.email

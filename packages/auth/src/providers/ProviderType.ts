@@ -40,6 +40,7 @@ export const PROVIDER_TYPE_LOCAL = 'local';
 export interface ProviderLocalOptions<Data> extends ProviderOptions<Data> {
     onEmailUpdated?: (provider: Provider) => Promise<void>;
     onPasswordUpdated?: (provider: Provider) => Promise<void>;
+    onRegistered?: (user: BaseUser, provider: Provider) => Promise<void>;
 
     extendRegisterInput?: NexusInputObjectTypeConfig<string>['definition'];
 }
