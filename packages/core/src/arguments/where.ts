@@ -23,12 +23,30 @@ const OPERATORS: {[k: string]: string} = {
     startsWith: 'ILIKE',
     endsWith: 'ILIKE'
 };
-const OPERATOR_VALUE_MODIFIERS: {[k: string]: (value: any) => string} = {
+const OPERATOR_VALUE_MODIFIERS: {[k: string]: (value: string) => string} = {
     contains: (value) => `%${value}%`,
     startsWith: (value) => `${value}%`,
     endsWith: (value) => `%${value}`
 };
-const CUSTOM_OPERATORS: {[k: string]: (qb: WhereExpression, varField: string, varValue: string, value: any) => void} = {
+const CUSTOM_OPERATORS: {[k: string]: (qb: WhereExpression, varField: string, varValue: string, value: unknown) => void} = {
+    equals: (q, varField, varValue, value) => {
+        if (value === null) {
+            q.andWhere(`${varField} IS NULL`);
+        } else {
+            q.andWhere(`${varField} = :${varValue}`, {
+                [varValue]: value
+            });
+        }
+    },
+    not: (q, varField, varValue, value) => {
+        if (value === null) {
+            q.andWhere(`${varField} IS NOT NULL`);
+        } else {
+            q.andWhere(`${varField} != :${varValue}`, {
+                [varValue]: value
+            });
+        }
+    },
     in: (q, varField, varValue, value) => {
         q.andWhere(`${varField} IN (:...${varValue})`, {
             [varValue]: value
