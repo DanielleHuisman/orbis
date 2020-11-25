@@ -36,21 +36,21 @@
         "dev": "tsc --watch"
     },
     "peerDependencies": {
-        "@nexus/schema": ">=0.14.0",
+        "@nexus/schema": ">=0.18.0",
         "typeorm": ">=0.2.23"
     },
     "dependencies": {
         "@types/graphql-iso-date": "^3.3.3",
-        "@types/node": "^13.13.4",
+        "@types/node": "^14.14.10",
         "@types/pluralize": "^0.0.29",
-        "@types/yup": "^0.28.0",
+        "@types/yup": "^0.29.9",
         "graphql": "^15.0.0",
         "graphql-iso-date": "^3.6.1",
         "pluralize": "^8.0.0",
-        "yup": "^0.28.5"
+        "yup": "^0.31.0"
     },
     "devDependencies": {
-        "@nexus/schema": "^0.14.0",
+        "@nexus/schema": "^0.19.1",
         "typeorm": "^0.2.25"
     }
 }
