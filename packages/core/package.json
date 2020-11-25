@@ -36,7 +36,7 @@
         "dev": "tsc --watch"
     },
     "peerDependencies": {
-        "@nexus/schema": ">=0.18.0",
+        "@nexus/schema": ">=0.18.0 && <0.19.0",
         "typeorm": ">=0.2.23"
     },
     "dependencies": {
@@ -50,7 +50,7 @@
         "yup": "^0.31.0"
     },
     "devDependencies": {
-        "@nexus/schema": "^0.19.1",
+        "@nexus/schema": "^0.18.0",
         "typeorm": "^0.2.25"
     }
 }
