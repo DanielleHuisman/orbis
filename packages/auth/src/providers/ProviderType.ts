@@ -65,5 +65,5 @@ export abstract class ProviderTypeOAuth<Options extends ProviderOptions<any>> ex
 
     abstract authorize(redirectUri: string): string;
 
-    abstract async authenticate(redirectUri: string, code: string): Promise<AuthenticateResponse>;
+    abstract authenticate(redirectUri: string, code: string): Promise<AuthenticateResponse>;
 }
