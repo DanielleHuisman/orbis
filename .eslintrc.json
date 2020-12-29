@@ -7,7 +7,9 @@
     "extends": [
         "eslint:recommended",
         "google",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/recommended",
+        "plugin:jest/style"
     ],
     "rules": {
         "comma-dangle": ["error", "never"],
