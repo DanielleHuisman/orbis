@@ -21,7 +21,7 @@ export const generateNexusQueries = (orbis: Orbis, Type: NexusObjectTypeDef<stri
     const ListType = objectType({
         name: `${Type.name}List`,
         definition(t) {
-            t.field('info', {
+            t.nonNull.field('info', {
                 type: 'ListInfo'
             });
             t.nonNull.list.nonNull.field('values', {
