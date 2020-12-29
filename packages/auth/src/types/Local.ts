@@ -1,4 +1,4 @@
-import {inputObjectType, extendType, arg, stringArg} from '@nexus/schema';
+import {inputObjectType, extendType, arg, stringArg, nonNull, nullable} from 'nexus';
 import {Orbis} from '@orbis-framework/core';
 import bcrypt from 'bcrypt';
 
@@ -15,15 +15,9 @@ export const generateTypes = (orbis: Orbis) => {
     const RegisterInput = inputObjectType({
         name: 'RegisterInput',
         definition(t) {
-            t.string('email', {
-                nullable: false
-            });
-            t.string('password', {
-                nullable: false
-            });
-            t.string('passwordRepeat', {
-                nullable: false
-            });
+            t.nonNull.string('email');
+            t.nonNull.string('password');
+            t.nonNull.string('passwordRepeat');
 
             // Get options
             const options = orbis.getModule<OrbisAuth>('auth').getOptions();
@@ -70,10 +64,9 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('register', {
                     args: {
-                        data: arg({
-                            type: RegisterInput,
-                            nullable: false
-                        })
+                        data: nullable(arg({
+                            type: RegisterInput
+                        }))
                     },
                     resolve(_, {data}: RegisterArgs) {
                         return orbis.transaction(async () => {
@@ -162,12 +155,8 @@ export const generateTypes = (orbis: Orbis) => {
                 t.field('login', {
                     type: 'AccessToken',
                     args: {
-                        email: stringArg({
-                            nullable: false
-                        }),
-                        password: stringArg({
-                            nullable: false
-                        })
+                        email: nonNull(stringArg()),
+                        password: nonNull(stringArg())
                     },
                     resolve(_, args: LoginArgs) {
                         return orbis.transaction(async () => {
@@ -210,9 +199,7 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('changeEmail', {
                     args: {
-                        email: stringArg({
-                            nullable: false
-                        })
+                        email: nonNull(stringArg())
                     },
                     resolve(_, args: ChangeEmailArgs, context: AuthContext) {
                         return orbis.transaction(async () => {
@@ -285,12 +272,8 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('changePassword', {
                     args: {
-                        password: stringArg({
-                            nullable: false
-                        }),
-                        passwordRepeat: stringArg({
-                            nullable: false
-                        })
+                        password: nonNull(stringArg()),
+                        passwordRepeat: nonNull(stringArg())
                     },
                     resolve(_, args: ChangePasswordArgs, context: AuthContext) {
                         return orbis.transaction(async () => {

@@ -1,10 +1,10 @@
-import {inputObjectType} from '@nexus/schema';
-import {CommonFieldConfig, NexusObjectTypeDef, NexusInputObjectTypeDef, NexusEnumTypeDef} from '@nexus/schema/dist/core';
+import {inputObjectType} from 'nexus';
+import {NexusObjectTypeDef, NexusInputObjectTypeDef, NexusEnumTypeDef, InputDefinitionBlock} from 'nexus/dist/core';
 import {getMetadataArgsStorage} from 'typeorm';
 
 import {getOrbis, Orbis, OrbisBaseOptions} from './orbis';
 import {EntityMetadata} from './metadata';
-import {resolveFieldType, generateNexusFields, generateNexusField} from './fields';
+import {resolveFieldType, generateNexusInputFields, generateNexusInputField} from './fields';
 import {isGeneratedField, Constructor} from './util';
 
 export const registerInputObjectType = (target: Constructor<unknown>, options: OrbisBaseOptions = {}) => {
@@ -14,7 +14,7 @@ export const registerInputObjectType = (target: Constructor<unknown>, options: O
     const Type = inputObjectType({
         name: target.name,
         definition(t) {
-            generateNexusFields(orbis, target, t);
+            generateNexusInputFields(orbis, target, t);
         }
     });
 
@@ -34,18 +34,14 @@ export const generateNexusInputObjects = (orbis: Orbis, Type: NexusObjectTypeDef
             name: `${Type.name}WhereUniqueInput`,
             definition(t) {
                 // TODO: should not be nullable if id is the only field
-                t.string('id', {
-                    nullable: true
-                });
+                t.nullable.string('id');
 
                 // Add unique columns
                 const unique = getMetadataArgsStorage().uniques.find((u) => u.target === entity.Entity);
                 if (unique) {
                     if (Array.isArray(unique.columns)) {
                         for (const column of unique.columns) {
-                            generateNexusField(orbis, Type.name, t, column, orbis.getMetadata().getField(Type.name, column), {
-                                nullable: true
-                            });
+                            generateNexusInputField(orbis, Type.name, t, column, orbis.getMetadata().getField(Type.name, column), true);
                         }
                     } else {
                         // TODO: handle unique function
@@ -75,15 +71,12 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
             while (currentTarget) {
                 if (orbis.getMetadata().hasFields(currentTarget.name)) {
                     for (const [fieldName, field] of Object.entries(orbis.getMetadata().getFields(currentTarget.name))) {
-                        let type = resolveFieldType(field);
-
-                        const config: CommonFieldConfig = {
-                            nullable: true
-                        };
-
                         if (field.graphql === false || field.resolve) {
                             continue;
                         }
+
+                        let type = resolveFieldType(field);
+                        const definition: Partial<InputDefinitionBlock<string>> = t.nullable;
 
                         if (Array.isArray(type)) {
                             type = type[0];
@@ -96,34 +89,29 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                         }
 
                         if (type === Boolean) {
-                            t.boolean(fieldName, config);
+                            definition.boolean(fieldName);
                         } else if (type === Number) {
                             if (field.float) {
-                                t.field(fieldName, {
-                                    type: 'FloatFilter',
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: 'FloatFilter'
                                 });
                             } else {
-                                t.field(fieldName, {
-                                    type: 'IntFilter',
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: 'IntFilter'
                                 });
                             }
                         } else if (type === String) {
-                            t.field(fieldName, {
-                                type: 'StringFilter',
-                                ...config
+                            definition.field(fieldName, {
+                                type: 'StringFilter'
                             });
                         } else if (type === Date) {
-                            t.field(fieldName, {
-                                type: 'DateTimeFilter',
-                                ...config
+                            definition.field(fieldName, {
+                                type: 'DateTimeFilter'
                             });
                         } else if (typeof type === 'function') {
                             const whereType = generateNexusWhereInputObject(orbis, type, type.name);
-                            t.field(fieldName, {
-                                type: whereType,
-                                ...config
+                            definition.field(fieldName, {
+                                type: whereType
                             });
                         } else {
                             const enumDef = Object.entries(orbis.getMetadata().getTypes())
@@ -131,9 +119,8 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
 
                             if (enumDef) {
                                 const enumFilterType = generateNexusEnumFilter(orbis, enumDef[0]);
-                                t.field(fieldName, {
-                                    type: enumFilterType,
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: enumFilterType
                                 });
                             } else {
                                 throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
@@ -141,15 +128,11 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                         }
                     }
 
-                    t.field('AND', {
-                        type: `${typeName}WhereInput`,
-                        list: true,
-                        nullable: true
+                    t.nullable.list.nonNull.field('AND', {
+                        type: `${typeName}WhereInput`
                     });
-                    t.field('OR', {
-                        type: `${typeName}WhereInput`,
-                        list: true,
-                        nullable: true
+                    t.nullable.list.nonNull.field('OR', {
+                        type: `${typeName}WhereInput`
                     });
                 }
 
@@ -165,23 +148,17 @@ export const generateNexusEnumFilter = (orbis: Orbis, enumTypeName: string) => {
     return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
-            t.field('equals', {
-                type: enumTypeName,
-                nullable: true
+            t.nullable.field('equals', {
+                type: enumTypeName
             });
-            t.field('not', {
-                type: enumTypeName,
-                nullable: true
+            t.nullable.field('not', {
+                type: enumTypeName
             });
-            t.field('in', {
-                type: enumTypeName,
-                list: true,
-                nullable: true
+            t.nullable.list.nonNull.field('in', {
+                type: enumTypeName
             });
-            t.field('notIn', {
-                type: enumTypeName,
-                list: true,
-                nullable: true
+            t.nullable.list.nonNull.field('notIn', {
+                type: enumTypeName
             });
         }
     }));
@@ -197,15 +174,12 @@ export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructo
             while (currentTarget) {
                 if (orbis.getMetadata().hasFields(currentTarget.name)) {
                     for (const [fieldName, field] of Object.entries(orbis.getMetadata().getFields(currentTarget.name))) {
-                        const type = resolveFieldType(field);
-
-                        const config: CommonFieldConfig = {
-                            nullable: true
-                        };
-
                         if (field.graphql === false || field.resolve) {
                             continue;
                         }
+
+                        const type = resolveFieldType(field);
+                        const definition: Partial<InputDefinitionBlock<string>> = t.nullable;
 
                         if (Array.isArray(type)) {
                             // TODO: handle array ordering
@@ -213,21 +187,18 @@ export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructo
                         }
 
                         if (type === Boolean || type === Number || type === String || type === Date) {
-                            t.field(fieldName, {
-                                type: 'OrderByArg',
-                                ...config
+                            definition.field(fieldName, {
+                                type: 'OrderByArg'
                             });
                         } else if (typeof type === 'function') {
                             const orderByType = generateNexusOrderByInputObject(orbis, type, type.name);
-                            t.field(fieldName, {
-                                type: orderByType,
-                                ...config
+                            definition.field(fieldName, {
+                                type: orderByType
                             });
                         } else {
                             // Enum
-                            t.field(fieldName, {
-                                type: 'OrderByArg',
-                                ...config
+                            definition.field(fieldName, {
+                                type: 'OrderByArg'
                             });
                         }
                     }
@@ -249,25 +220,23 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
             while (currentTarget) {
                 if (orbis.getMetadata().hasFields(currentTarget.name)) {
                     for (const [fieldName, field] of Object.entries(orbis.getMetadata().getFields(currentTarget.name))) {
-                        let type = resolveFieldType(field);
-
-                        const config: CommonFieldConfig = {
-                            nullable: isUpdate || !!field.nullable
-                        };
-
                         if (field.graphql === false || field.resolve) {
                             continue;
                         }
 
+                        let type = resolveFieldType(field);
+                        let definition: Partial<InputDefinitionBlock<string>> = t;
+                        let isNullable = isUpdate || !!field.nullable;
+
                         if (!isUpdate) {
                             // Columns with defaults or generated values are not required
                             if (isGeneratedField(field)) {
-                                config.nullable = true;
+                                isNullable = true;
                             }
 
                             // One-to-many and many-to-many relations are initialized to an empty list by default
                             if (field.relation && Array.isArray(type)) {
-                                config.nullable = true;
+                                isNullable = true;
                             }
 
                             // Check if the field is generated by entity create metadata
@@ -275,66 +244,64 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
                             const globalEntityMetadata = orbis.getOption('entity', {});
                             if (entity) {
                                 if ((globalEntityMetadata.create && globalEntityMetadata.create[fieldName]) || (entity.create && entity.create[fieldName])) {
-                                    config.nullable = true;
+                                    isNullable = true;
                                 }
                             }
+                        }
+
+                        if (isNullable) {
+                            definition = definition.nullable;
                         }
 
                         if (Array.isArray(type)) {
                             type = type[0];
-                            config.list = true;
+                            definition = definition.list.nonNull;
                         }
 
                         if (type === Boolean) {
-                            t.boolean(fieldName, config);
+                            definition.boolean(fieldName);
                         } else if (type === Number) {
                             if (field.float) {
-                                t.int(fieldName, config);
+                                definition.int(fieldName);
                             } else {
-                                t.float(fieldName, config);
+                                definition.float(fieldName);
                             }
                         } else if (type === String) {
-                            t.string(fieldName, config);
+                            definition.string(fieldName);
                         } else if (type === Date) {
                             if (field.column && field.column.options.type) {
                                 const columnType = field.column.options.type.toString();
                                 if (columnType.startsWith('timestamp') || columnType.startsWith('datetime')) {
-                                    t.field(fieldName, {
-                                        type: 'DateTime',
-                                        ...config
+                                    definition.field(fieldName, {
+                                        type: 'DateTime'
                                     });
                                 } else if (columnType.startsWith('date')) {
-                                    t.field(fieldName, {
-                                        type: 'Date',
-                                        ...config
+                                    definition.field(fieldName, {
+                                        type: 'Date'
                                     });
                                 } else if (columnType.startsWith('time')) {
-                                    t.field(fieldName, {
-                                        type: 'Time',
-                                        ...config
+                                    definition.field(fieldName, {
+                                        type: 'Time'
                                     });
                                 }
                             } else {
                                 // TODO: add config option, similar to float
-                                t.field(fieldName, {
-                                    type: 'DateTime',
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: 'DateTime'
                                 });
                             }
                         } else if (typeof type === 'function') {
                             if (field.relation) {
                                 // Relation
                                 const mutationType = generateNexusRelationInputObject(orbis, type.name, isUpdate);
-                                t.field(fieldName, {
-                                    type: mutationType,
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: mutationType
                                 });
                             } else {
                                 // Embedded entity
                                 const mutationType = generateNexusMutationInputObject(orbis, type, type.name, isUpdate);
-                                t.field(fieldName, {
-                                    type: mutationType,
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: mutationType
                                 });
                             }
                         } else {
@@ -342,9 +309,8 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
                                 .find((typeDef) => typeDef instanceof NexusEnumTypeDef && typeDef.value.members === type);
 
                             if (enumDef) {
-                                t.field(fieldName, {
-                                    type: enumDef as NexusEnumTypeDef<string>,
-                                    ...config
+                                definition.field(fieldName, {
+                                    type: enumDef as NexusEnumTypeDef<string>
                                 });
                             } else {
                                 throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
@@ -365,20 +331,17 @@ export const generateNexusRelationInputObject = (orbis: Orbis, typeName: string,
     return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
-            t.field('create', {
-                type: `${typeName}CreateInput`,
-                nullable: true
+            t.nullable.field('create', {
+                type: `${typeName}CreateInput`
             });
 
-            t.field('connect', {
-                type: `${typeName}WhereUniqueInput`,
-                nullable: true
+            t.nullable.field('connect', {
+                type: `${typeName}WhereUniqueInput`
             });
 
             if (isUpdate) {
-                t.field('disconnect', {
-                    type: `${typeName}WhereUniqueInput`,
-                    nullable: true
+                t.nullable.field('disconnect', {
+                    type: `${typeName}WhereUniqueInput`
                 });
             }
         }

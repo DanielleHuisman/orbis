@@ -1,12 +1,12 @@
-import {GraphQLDate, GraphQLTime, GraphQLDateTime} from 'graphql-iso-date';
+import {DateResolver, TimeResolver, DateTimeResolver} from 'graphql-scalars';
 
 import {Orbis} from './orbis';
 
 // Export date and time scalars
 export {
-    GraphQLDate as ScalarDate,
-    GraphQLTime as ScalarTime,
-    GraphQLDateTime as ScalarDateTime
+    DateResolver as ScalarDate,
+    TimeResolver as ScalarTime,
+    DateTimeResolver as ScalarDateTime
 };
 
 export enum OrderByArg {
@@ -48,9 +48,9 @@ export interface ListInfo {
 }
 
 export const registerOrbisTypes = (orbis: Orbis) => {
-    orbis.registerScalarType(GraphQLDate);
-    orbis.registerScalarType(GraphQLTime);
-    orbis.registerScalarType(GraphQLDateTime);
+    orbis.registerScalarType(DateResolver);
+    orbis.registerScalarType(TimeResolver);
+    orbis.registerScalarType(DateTimeResolver);
 
     orbis.registerEnumType({
         name: 'OrderByArg',

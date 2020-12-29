@@ -1,5 +1,5 @@
-import {arg, intArg, extendType} from '@nexus/schema';
-import {NexusObjectTypeDef, objectType} from '@nexus/schema/dist/core';
+import {arg, intArg, extendType, nonNull, nullable} from 'nexus';
+import {NexusObjectTypeDef, objectType} from 'nexus/dist/core';
 
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
@@ -24,10 +24,8 @@ export const generateNexusQueries = (orbis: Orbis, Type: NexusObjectTypeDef<stri
             t.field('info', {
                 type: 'ListInfo'
             });
-            t.field('values', {
-                type: Type,
-                nullable: false,
-                list: true
+            t.nonNull.list.nonNull.field('values', {
+                type: Type
             });
         }
     });
@@ -40,14 +38,12 @@ export const generateNexusQueries = (orbis: Orbis, Type: NexusObjectTypeDef<stri
         orbis.getMetadata().addTypeByName(`Query${Type.name}FindOne`, extendType({
             type: 'Query',
             definition(t) {
-                t.field(metadata.singularName, {
+                t.nonNull.field(metadata.singularName, {
                     type: Type,
-                    nullable: false,
                     args: {
-                        where: arg({
-                            type: `${Type.name}WhereUniqueInput`,
-                            nullable: false
-                        })
+                        where: nonNull(arg({
+                            type: `${Type.name}WhereUniqueInput`
+                        }))
                     },
                     async resolve(_root, args, context, info) {
                         fixNullPrototypes(args);
@@ -72,18 +68,13 @@ export const generateNexusQueries = (orbis: Orbis, Type: NexusObjectTypeDef<stri
         orbis.getMetadata().addTypeByName(`Query${Type.name}FindMany`, extendType({
             type: 'Query',
             definition(t) {
-                t.field(metadata.pluralName, {
+                t.nonNull.field(metadata.pluralName, {
                     type: ListType,
-                    nullable: false,
                     args: {
                         where: `${Type.name}WhereInput`,
                         orderBy: `${Type.name}OrderByInput`,
-                        skip: intArg({
-                            nullable: true
-                        }),
-                        take: intArg({
-                            nullable: true
-                        })
+                        skip: nullable(intArg()),
+                        take: nullable(intArg())
                     },
                     async resolve(_root, args, context, info) {
                         fixNullPrototypes(args);

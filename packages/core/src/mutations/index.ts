@@ -1,5 +1,5 @@
-import {extendType, arg, intArg} from '@nexus/schema';
-import {NexusObjectTypeDef} from '@nexus/schema/dist/core';
+import {extendType, arg, intArg, nonNull} from 'nexus';
+import {NexusObjectTypeDef, nullable} from 'nexus/dist/core';
 
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
@@ -22,14 +22,12 @@ export const generateNexusMutations = (orbis: Orbis, Type: NexusObjectTypeDef<st
         orbis.getMetadata().addTypeByName(`Mutation${Type.name}CreateOne`, extendType({
             type: 'Mutation',
             definition(t) {
-                t.field(`create${firstUpper(metadata.singularName)}`, {
+                t.nonNull.field(`create${firstUpper(metadata.singularName)}`, {
                     type: Type,
-                    nullable: false,
                     args: {
-                        data: arg({
-                            type: `${Type.name}CreateInput`,
-                            nullable: false
-                        })
+                        data: nonNull(arg({
+                            type: `${Type.name}CreateInput`
+                        }))
                     },
                     async resolve(_root, args, context, info) {
                         fixNullPrototypes(args);
@@ -51,18 +49,15 @@ export const generateNexusMutations = (orbis: Orbis, Type: NexusObjectTypeDef<st
         orbis.getMetadata().addTypeByName(`Mutation${Type.name}UpdateOne`, extendType({
             type: 'Mutation',
             definition(t) {
-                t.field(`update${firstUpper(metadata.singularName)}`, {
+                t.nonNull.field(`update${firstUpper(metadata.singularName)}`, {
                     type: Type,
-                    nullable: false,
                     args: {
-                        where: arg({
-                            type: `${Type.name}WhereUniqueInput`,
-                            nullable: false
-                        }),
-                        data: arg({
-                            type: `${Type.name}UpdateInput`,
-                            nullable: false
-                        })
+                        where: nonNull(arg({
+                            type: `${Type.name}WhereUniqueInput`
+                        })),
+                        data: nonNull(arg({
+                            type: `${Type.name}UpdateInput`
+                        }))
                     },
                     async resolve(_root, args, context, info) {
                         fixNullPrototypes(args);
@@ -84,14 +79,12 @@ export const generateNexusMutations = (orbis: Orbis, Type: NexusObjectTypeDef<st
         orbis.getMetadata().addTypeByName(`Mutation${Type.name}DeleteOne`, extendType({
             type: 'Mutation',
             definition(t) {
-                t.field(`delete${firstUpper(metadata.singularName)}`, {
+                t.nonNull.field(`delete${firstUpper(metadata.singularName)}`, {
                     type: Type,
-                    nullable: false,
                     args: {
-                        where: arg({
-                            type: `${Type.name}WhereUniqueInput`,
-                            nullable: false
-                        })
+                        where: nonNull(arg({
+                            type: `${Type.name}WhereUniqueInput`
+                        }))
                     },
                     async resolve(_root, args, context, info) {
                         fixNullPrototypes(args);
@@ -113,18 +106,13 @@ export const generateNexusMutations = (orbis: Orbis, Type: NexusObjectTypeDef<st
         orbis.getMetadata().addTypeByName(`Mutation${Type.name}DeleteMany`, extendType({
             type: 'Mutation',
             definition(t) {
-                t.field(`delete${firstUpper(metadata.pluralName)}`, {
+                t.nonNull.field(`delete${firstUpper(metadata.pluralName)}`, {
                     type: `${Type.name}List`,
-                    nullable: false,
                     args: {
                         where: `${Type.name}WhereInput`,
                         orderBy: `${Type.name}OrderByInput`,
-                        skip: intArg({
-                            nullable: true
-                        }),
-                        take: intArg({
-                            nullable: true
-                        })
+                        skip: nullable(intArg()),
+                        take: nullable(intArg())
                     },
                     async resolve(_root, args, context, info) {
                         fixNullPrototypes(args);

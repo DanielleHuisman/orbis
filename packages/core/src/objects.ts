@@ -1,10 +1,10 @@
 import pluralize from 'pluralize';
-import {objectType} from '@nexus/schema';
+import {objectType} from 'nexus';
 import {BaseEntity} from 'typeorm';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata} from './metadata';
-import {generateNexusFields} from './fields';
+import {generateNexusOutputFields} from './fields';
 import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
 export interface OrbisObjectOptions<ObjectType> extends OrbisBaseOptions {
@@ -33,7 +33,7 @@ export const registerObjectType = <ObjectType>(target: Constructor<unknown>, opt
                 }
             }
 
-            generateNexusFields(orbis, target, t);
+            generateNexusOutputFields(orbis, target, t);
         }
     });
 

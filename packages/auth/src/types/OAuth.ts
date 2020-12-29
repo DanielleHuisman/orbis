@@ -1,4 +1,4 @@
-import {extendType, stringArg} from '@nexus/schema';
+import {extendType, stringArg, nonNull, nullable} from 'nexus';
 import {Orbis} from '@orbis-framework/core';
 
 import {createAccessToken, AuthContext} from '../authentication';
@@ -29,12 +29,8 @@ export const generateTypes = (orbis: Orbis) => ({
 
             t.string('oauthAuthorize', {
                 args: {
-                    type: stringArg({
-                        nullable: false
-                    }),
-                    redirectUri: stringArg({
-                        nullable: false
-                    })
+                    type: nonNull(stringArg()),
+                    redirectUri: nonNull(stringArg())
                 },
                 async resolve(_, args: OAuthAuthorizeArgs) {
                     // Find provider
@@ -61,18 +57,10 @@ export const generateTypes = (orbis: Orbis) => ({
             t.field('oauthAuthenticate', {
                 type: 'AccessToken',
                 args: {
-                    type: stringArg({
-                        nullable: false
-                    }),
-                    redirectUri: stringArg({
-                        nullable: false
-                    }),
-                    code: stringArg({
-                        nullable: false
-                    }),
-                    userId: stringArg({
-                        nullable: true
-                    })
+                    type: nonNull(stringArg()),
+                    redirectUri: nonNull(stringArg()),
+                    code: nonNull(stringArg()),
+                    userId: nullable(stringArg())
                 },
                 resolve(_, args: OAuthAuthenticateArgs) {
                     return orbis.transaction(async () => {
@@ -159,9 +147,7 @@ export const generateTypes = (orbis: Orbis) => ({
             t.field('oauthUnlink', {
                 type: 'Provider',
                 args: {
-                    type: stringArg({
-                        nullable: false
-                    })
+                    type: nonNull(stringArg())
                 },
                 resolve(_, args: OAuthUnlinkArgs, context: AuthContext) {
                     return orbis.transaction(async () => {

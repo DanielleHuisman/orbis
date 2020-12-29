@@ -1,4 +1,4 @@
-import {unionType} from '@nexus/schema';
+import {unionType} from 'nexus';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 
@@ -14,8 +14,6 @@ export const registerUnionType = (options: OrbisUnionOptions) => {
     const Type = unionType({
         name: options.name,
         definition(t) {
-            t.resolveType((type) => type.__typename);
-
             t.members(...options.members);
         }
     });

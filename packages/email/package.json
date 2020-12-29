@@ -39,9 +39,9 @@
         "@orbis-framework/core": ">=0.0.1"
     },
     "dependencies": {
-        "@types/email-templates": "^7.1.0",
-        "email-templates": "^8.0.0",
-        "nodemailer": "^6.4.14"
+        "@types/email-templates": "^8.0.0",
+        "email-templates": "^8.0.2",
+        "nodemailer": "^6.4.17"
     },
     "devDependencies": {
         "@orbis-framework/core": "^0.1.27"

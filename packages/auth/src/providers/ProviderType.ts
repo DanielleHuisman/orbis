@@ -1,4 +1,4 @@
-import {NexusInputObjectTypeConfig} from '@nexus/schema/dist/definitions/inputObjectType';
+import {NexusInputObjectTypeConfig} from 'nexus/dist/definitions/inputObjectType';
 
 import {BaseUser, Provider} from '../entities';
 

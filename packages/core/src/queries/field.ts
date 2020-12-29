@@ -1,5 +1,5 @@
-import {intArg} from '@nexus/schema';
-import {CommonFieldConfig, OutputDefinitionBlock} from '@nexus/schema/dist/core';
+import {intArg, nullable} from 'nexus';
+import {CommonFieldConfig, OutputDefinitionBlock} from 'nexus/dist/core';
 
 import {Orbis} from '../orbis';
 import {WhereArgument} from '../arguments';
@@ -16,17 +16,13 @@ export const generateNexusRelationListField = (
     fieldTypeName: string,
     overrideConfig?: CommonFieldConfig
 ) => {
-    t.field(fieldName, {
+    t.nonNull.field(fieldName, {
         type: `${fieldTypeName}List`,
         args: {
             where: `${fieldTypeName}WhereInput`,
             orderBy: `${fieldTypeName}OrderByInput`,
-            skip: intArg({
-                nullable: true
-            }),
-            take: intArg({
-                nullable: true
-            })
+            skip: nullable(intArg()),
+            take: nullable(intArg())
         },
         async resolve(root, args, context, info) {
             fixNullPrototypes(args);

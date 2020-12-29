@@ -1,4 +1,4 @@
-import {AllNexusNamedTypeDefs, NexusExtendInputTypeDef, NexusExtendTypeDef, FieldResolver} from '@nexus/schema/dist/core';
+import {AllNexusNamedTypeDefs, NexusExtendInputTypeDef, NexusExtendTypeDef, FieldResolver} from 'nexus/dist/core';
 import {ColumnMetadataArgs} from 'typeorm/metadata-args/ColumnMetadataArgs';
 import {RelationMetadataArgs} from 'typeorm/metadata-args/RelationMetadataArgs';
 

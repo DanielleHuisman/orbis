@@ -1,10 +1,10 @@
-import {interfaceType} from '@nexus/schema';
-import {AbstractTypeResolver} from '@nexus/schema/dist/core';
+import {interfaceType} from 'nexus';
+import {AbstractTypeResolver} from 'nexus/dist/core';
 import {BaseEntity} from 'typeorm';
 import pluralize from 'pluralize';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
-import {generateNexusFields} from './fields';
+import {generateNexusOutputFields} from './fields';
 import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata} from './metadata';
 import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
@@ -24,14 +24,9 @@ export const registerInterfaceType = <InterfaceType>(target: Constructor<unknown
     const Type = interfaceType({
         name: target.name,
         definition(t) {
-            if (options.resolveType) {
-                t.resolveType(options.resolveType);
-            } else {
-                t.resolveType((root) => Object.getPrototypeOf(root).constructor.name);
-            }
-
-            generateNexusFields(orbis, target, t);
-        }
+            generateNexusOutputFields(orbis, target, t);
+        },
+        resolveType: options.resolveType ? options.resolveType : (root) => Object.getPrototypeOf(root).constructor.name
     });
 
     // Store type

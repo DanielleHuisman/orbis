@@ -1,5 +1,5 @@
-import {plugin} from '@nexus/schema';
-import {NexusObjectTypeDef} from '@nexus/schema/dist/core';
+import {plugin} from 'nexus';
+import {NexusObjectTypeDef} from 'nexus/dist/core';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata} from './metadata';
@@ -53,10 +53,14 @@ export const orbisPlugin = (options: OrbisPluginOptions = {}) => {
     // Return Nexus plugin
     return plugin({
         name: 'orbis-plugin',
-        onInstall: () => {
-            return {
-                types
-            };
+        onInstall: (builder) => {
+            for (const type of types) {
+                if (builder.hasType(type.name)) {
+                    throw new Error(`Type "${type.name}" already exists.`);
+                }
+
+                builder.addType(type);
+            }
         }
     });
 };

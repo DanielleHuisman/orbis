@@ -1,4 +1,4 @@
-import {ArgsValue, GetGen} from '@nexus/schema/dist/core';
+import {ArgsValue, GetGen} from 'nexus/dist/core';
 import {GraphQLResolveInfo} from 'graphql';
 import {getMetadataArgsStorage, BaseEntity} from 'typeorm';
 import * as yup from 'yup';

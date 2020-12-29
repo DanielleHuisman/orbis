@@ -1,5 +1,5 @@
-import {scalarType} from '@nexus/schema';
-import {ScalarBase} from '@nexus/schema/dist/core';
+import {scalarType} from 'nexus';
+import {ScalarBase} from 'nexus/dist/core';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 

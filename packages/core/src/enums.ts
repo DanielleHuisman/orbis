@@ -1,4 +1,4 @@
-import {enumType} from '@nexus/schema';
+import {enumType} from 'nexus';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 import {Enum} from './util';

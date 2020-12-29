@@ -1,4 +1,4 @@
-import {extendType, stringArg} from '@nexus/schema';
+import {extendType, stringArg, nonNull} from 'nexus';
 import {Orbis} from '@orbis-framework/core';
 import bcrypt from 'bcrypt';
 import moment from 'moment';
@@ -65,9 +65,7 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('requestVerifyEmail', {
                     args: {
-                        email: stringArg({
-                            nullable: false
-                        })
+                        email: nonNull(stringArg())
                     },
                     resolve(_, args: RequestArgs) {
                         return orbis.transaction(async () => {
@@ -113,9 +111,7 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('requestResetPassword', {
                     args: {
-                        email: stringArg({
-                            nullable: false
-                        })
+                        email: nonNull(stringArg())
                     },
                     resolve(_, args: RequestArgs) {
                         return orbis.transaction(async () => {
@@ -163,9 +159,7 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('verifyEmail', {
                     args: {
-                        token: stringArg({
-                            nullable: false
-                        })
+                        token: nonNull(stringArg())
                     },
                     resolve(_, args: VerifyEmailArgs) {
                         return orbis.transaction(async () => {
@@ -223,15 +217,9 @@ export const generateTypes = (orbis: Orbis) => {
 
                 t.boolean('resetPassword', {
                     args: {
-                        token: stringArg({
-                            nullable: false
-                        }),
-                        password: stringArg({
-                            nullable: false
-                        }),
-                        passwordRepeat: stringArg({
-                            nullable: false
-                        })
+                        token: nonNull(stringArg()),
+                        password: nonNull(stringArg()),
+                        passwordRepeat: nonNull(stringArg())
                     },
                     resolve(_, args: ResetPasswordArgs) {
                         return orbis.transaction(async () => {
