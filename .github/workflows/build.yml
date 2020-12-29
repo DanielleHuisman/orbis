@@ -12,4 +12,4 @@ jobs:
           node-version: '14'
       - run: yarn
       - run: yarn run lerna bootstrap
-      - run: yarn run lerna build
+      - run: yarn run lerna run build
