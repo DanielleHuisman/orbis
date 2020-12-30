@@ -76,7 +76,7 @@ export const generateTypes = (orbis: Orbis) => {
                                         equals: PROVIDER_TYPE_LOCAL
                                     },
                                     identifier: {
-                                        equals: args.email
+                                        equals: args.email.trim().toLowerCase()
                                     }
                                 },
                                 relations: ['user']
@@ -122,7 +122,7 @@ export const generateTypes = (orbis: Orbis) => {
                                         equals: PROVIDER_TYPE_LOCAL
                                     },
                                     identifier: {
-                                        equals: args.email
+                                        equals: args.email.trim().toLowerCase()
                                     }
                                 },
                                 relations: ['user']
