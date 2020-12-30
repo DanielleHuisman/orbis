@@ -77,6 +77,8 @@ export const generateTypes = (orbis: Orbis) => {
                                 throw new Error('errors.register.password.invalid');
                             }
 
+                            const email = data.email.trim().toLowerCase();
+
                             // Check if the email already exists
                             const existingProvider = await orbis.findFirst(Provider, {
                                 where: {
@@ -84,7 +86,7 @@ export const generateTypes = (orbis: Orbis) => {
                                         equals: 'local'
                                     },
                                     identifier: {
-                                        equals: data.email.trim()
+                                        equals: email
                                     }
                                 }
                             });
@@ -93,16 +95,15 @@ export const generateTypes = (orbis: Orbis) => {
                             }
 
                             // Calculate password hash
-                            const identifier = data.email.trim();
                             const credentials = await bcrypt.hash(data.password, options.bcrypt?.rounds ?? DEFAULT_BCRYPT_ROUNDS);
 
                             // Create user
                             const user = await providerType.getOptions().createUser({
                                 provider: {
                                     type: PROVIDER_TYPE_LOCAL,
-                                    identifier,
+                                    identifier: email,
                                     credentials,
-                                    email: identifier
+                                    email
                                 },
                                 data
                             });
@@ -111,9 +112,9 @@ export const generateTypes = (orbis: Orbis) => {
                             const provider = await orbis.createOne(Provider, {
                                 data: {
                                     type: PROVIDER_TYPE_LOCAL,
-                                    identifier,
+                                    identifier: email,
                                     credentials,
-                                    email: identifier,
+                                    email,
                                     user: {
                                         connect: {
                                             id: user.id
@@ -167,7 +168,7 @@ export const generateTypes = (orbis: Orbis) => {
                                         equals: PROVIDER_TYPE_LOCAL
                                     },
                                     identifier: {
-                                        equals: args.email
+                                        equals: args.email.trim().toLowerCase()
                                     }
                                 },
                                 relations: ['user']
@@ -207,6 +208,8 @@ export const generateTypes = (orbis: Orbis) => {
                                 throw new Error('errors.unauthenticated');
                             }
 
+                            const email = args.email.trim().toLowerCase();
+
                             // Find the local provider
                             let provider = await orbis.findFirst(Provider, {
                                 where: {
@@ -233,8 +236,8 @@ export const generateTypes = (orbis: Orbis) => {
                                     id: provider.id
                                 },
                                 data: {
-                                    identifier: args.email.trim(),
-                                    email: args.email.trim(),
+                                    identifier: email,
+                                    email,
                                     isVerified: false
                                 }
                             });
