@@ -244,7 +244,6 @@ export const generateNexusOutputField = (
         definition = definition.list.nonNull;
     }
 
-    console.log(fieldName, field.nullable);
     if (field.nullable) {
         definition = definition.nullable;
     } else {
