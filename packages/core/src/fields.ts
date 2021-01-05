@@ -164,6 +164,8 @@ export const generateNexusInputField = (
 
     if (field.nullable || forceNullable) {
         definition = definition.nullable;
+    } else {
+        definition = definition.nonNull;
     }
 
     if (type === Boolean) {
@@ -229,7 +231,7 @@ export const generateNexusOutputField = (
         config.resolve = field.resolve;
     }
 
-    let definition: Partial<OutputDefinitionBlock<string>> = t.nonNull;
+    let definition: Partial<OutputDefinitionBlock<string>> = t;
 
     if (Array.isArray(type)) {
         type = type[0];
@@ -244,6 +246,8 @@ export const generateNexusOutputField = (
 
     if (field.nullable) {
         definition = definition.nullable;
+    } else {
+        definition = definition.nonNull;
     }
 
     if (type === Boolean) {
