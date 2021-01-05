@@ -21,6 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn global add lerna
-      - run: lerna bootstrap
+      - run: yarn run lerna bootstrap
       - run: yarn run lint:ci
       - run: yarn run test:ci
