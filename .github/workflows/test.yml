@@ -20,7 +20,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
-      - run: yarn global add lerna
+      - run: yarn
       - run: yarn run lerna bootstrap
+      - run: ls -alh node_modules
       - run: yarn run lint:ci
       - run: yarn run test:ci
