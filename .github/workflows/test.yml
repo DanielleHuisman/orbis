@@ -24,3 +24,6 @@ jobs:
       - run: yarn run lerna bootstrap
       - run: yarn run lint:ci
       - run: yarn run test:ci
+      - uses: codecov/codecov-action@v1
+        with:
+          directory: coverage
