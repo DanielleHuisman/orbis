@@ -7,7 +7,9 @@
     "extends": [
         "eslint:recommended",
         "google",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:@typescript-eslint/recommended",
+        "plugin:jest/recommended",
+        "plugin:jest/style"
     ],
     "rules": {
         "comma-dangle": ["error", "never"],
@@ -16,6 +18,7 @@
         }],
         "max-len": ["error", 160],
         "new-cap": "off",
+        "no-console": "error",
         "no-invalid-this": "off",
         "no-warning-comments": "warn",
         "padded-blocks": "off",

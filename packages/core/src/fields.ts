@@ -157,15 +157,15 @@ export const generateNexusInputField = (
 
     let definition: Partial<InputDefinitionBlock<string>> = t;
 
-    if (Array.isArray(type)) {
-        type = type[0];
-        definition = definition.list.nonNull;
-    }
-
     if (field.nullable || forceNullable) {
         definition = definition.nullable;
     } else {
         definition = definition.nonNull;
+    }
+
+    if (Array.isArray(type)) {
+        type = type[0];
+        definition = definition.list.nonNull;
     }
 
     if (type === Boolean) {
@@ -233,6 +233,12 @@ export const generateNexusOutputField = (
 
     let definition: Partial<OutputDefinitionBlock<string>> = t;
 
+    if (field.nullable) {
+        definition = definition.nullable;
+    } else {
+        definition = definition.nonNull;
+    }
+
     if (Array.isArray(type)) {
         type = type[0];
 
@@ -242,12 +248,6 @@ export const generateNexusOutputField = (
         }
 
         definition = definition.list.nonNull;
-    }
-
-    if (field.nullable) {
-        definition = definition.nullable;
-    } else {
-        definition = definition.nonNull;
     }
 
     if (type === Boolean) {
