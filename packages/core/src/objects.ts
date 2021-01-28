@@ -53,8 +53,9 @@ export const registerObjectType = <ObjectType>(target: Constructor<unknown>, opt
         const pluralName = pluralize(singularName);
 
         // Determine which fields are columns and which are relations
-        let columns = Object.entries(orbis.getMetadata().getFields(Type.name)).filter(([_, field]) => !!field.column).map(([fieldName]) => fieldName);
-        let relations = Object.entries(orbis.getMetadata().getFields(Type.name)).filter(([_, field]) => !!field.relation).map(([fieldName]) => fieldName);
+        const fields = orbis.getMetadata().hasFields(Type.name) ? Object.entries(orbis.getMetadata().getFields(Type.name)) : [];
+        let columns = fields.filter(([_, field]) => !!field.column).map(([fieldName]) => fieldName);
+        let relations = fields.filter(([_, field]) => !!field.relation).map(([fieldName]) => fieldName);
 
         // Merge columns and relations of interfaces with this entity
         if (options.implements) {
