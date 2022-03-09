@@ -42,7 +42,7 @@
     },
     "dependencies": {
         "@types/pluralize": "^0.0.29",
-        "@types/yup": "^0.29.11",
+        "@types/yup": "^0.29.13",
         "graphql": "^16.3.0",
         "graphql-scalars": "^1.15.0",
         "pluralize": "^8.0.0",
