@@ -1,4 +1,5 @@
 import {ObjectLiteral} from 'typeorm';
+import {RelationMetadata} from 'typeorm/metadata/RelationMetadata';
 
 import {Orbis} from '../orbis';
 import {EntityMetadata, EntityCreateMetadata} from '../metadata';
@@ -11,6 +12,12 @@ import {updateRelation} from './relations';
 export interface CreateOneArguments {
     data: {[key: string]: any};
     relations?: string[];
+}
+
+interface ToManyRelation {
+    fieldName: string;
+    fieldValue: any[];
+    relationMetadata: RelationMetadata;
 }
 
 const mergeCreateMetadata = (values: ObjectLiteral, create: EntityCreateMetadata) => {
@@ -42,23 +49,29 @@ export const createEntity = async <Entity>(
 
     // Parse data
     const values: ObjectLiteral = {};
+    const toManyRelations: ToManyRelation[] = [];
     for (const [fieldName, fieldValue] of Object.entries(args.data)) {
+        // Handle relationship
         if (metadata.relations.includes(fieldName)) {
             // Find relation metadata
             const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
 
-            if (Array.isArray(fieldValue)) {
-                for (const value of fieldValue as any[]) {
-                    await updateRelation(orbis, metadata, fieldName, value, false, {
-                        context: options.context
-                    });
-
-                    // TODO: is it possible for this side to be owning? Many-to-many?
-                    // if (relationMetadata.isOwning) {
-                    //     values[] = identifier;
-                    // }
+            if (relationMetadata.isOneToMany || relationMetadata.isManyToMany) {
+                if (!Array.isArray(fieldValue)) {
+                    throw new Error(`Value of relationship "${fieldName}" has to be an array.`);
                 }
+
+                // These relations are handled after the entity is created
+                toManyRelations.push({
+                    fieldName,
+                    fieldValue,
+                    relationMetadata
+                });
             } else {
+                if (Array.isArray(fieldValue)) {
+                    throw new Error(`Value of relationship "${fieldName}" can't be an array.`);
+                }
+
                 const identifier = await updateRelation(orbis, metadata, fieldName, fieldValue, false, {
                     context: options.context
                 });
@@ -81,7 +94,7 @@ export const createEntity = async <Entity>(
         await orbis.getMetadata().getSchema(metadata.Entity.name).validate(values);
     }
 
-    // Execute insert query
+    // Set insert values
     qb.values(values);
 
     // Add data to query runner for subscribers
@@ -89,10 +102,34 @@ export const createEntity = async <Entity>(
         values
     };
 
+    // Execute insert query
     const result = await qb.execute();
 
+    // Get entity identifier from insert query
+    const identifier = result.identifiers[0] as Entity;
+
+    // Handle one-to-many and many-to-many relationships
+    for (const {fieldName, fieldValue, relationMetadata} of toManyRelations) {
+        for (const value of fieldValue) {
+            // Add the entity's identifier to the relationship data
+            if (value.create) {
+                value.create[relationMetadata.inverseSidePropertyPath] = {
+                    connect: identifier
+                };
+            } else if (value.connect) {
+                value.connect[relationMetadata.inverseSidePropertyPath] = {
+                    connect: identifier
+                };
+            }
+
+            await updateRelation(orbis, metadata, fieldName, value, false, {
+                context: options.context
+            });
+        }
+    }
+
     // Return entity identifier
-    return result.identifiers[0] as Entity;
+    return identifier;
 };
 
 export const createOne = async <Entity>(
