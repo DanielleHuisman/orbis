@@ -51,7 +51,9 @@ export const updateRelation = async <Entity>(
 
     if (fieldValue.create) {
         // Create other entity
-        const identifier = await createEntity<Entity>(orbis, otherMetadata, fieldValue.create, {
+        const identifier = await createEntity<Entity>(orbis, otherMetadata, {
+            data: fieldValue.create
+        }, {
             context: options.context
         });
 
