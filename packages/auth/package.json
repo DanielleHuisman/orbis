@@ -56,6 +56,6 @@
     "devDependencies": {
         "@orbis-framework/core": "^0.2.6",
         "@orbis-framework/email": "^0.2.6",
-        "typeorm": "^0.2.45"
+        "typeorm": "0.2.45"
     }
 }
