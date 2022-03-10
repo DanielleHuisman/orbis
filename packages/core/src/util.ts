@@ -84,7 +84,7 @@ export interface OperationOptions {
 export type SchemaFunction<ObjectType> = (
     schema: YupObjectSchema<ObjectType>,
     yupInstance: typeof yup
-) => YupObjectSchema<ObjectType>;
+) => YupObjectSchema<unknown>;
 
 export type YupObjectSchema<T> = Omit<yup.ObjectSchema<T>, 'fields'> & {
     fields: {
