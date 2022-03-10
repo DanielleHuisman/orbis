@@ -13,8 +13,13 @@ import {
 import {Orbis} from '../orbis';
 import {resolveFieldType} from '../fields';
 import {EntityMetadata} from '../metadata';
+import {OrderByArg} from '../types';
 
-export const parseOrderByInfo = (orderBy: any, info: GraphQLResolveInfo) => {
+export type OrderByArgumentAsObject = {
+    [key: string]: OrderByArg | OrderByArgumentAsObject;
+};
+
+export const parseOrderByInfo = (orderBy: OrderByArgumentAsObject, info: GraphQLResolveInfo) => {
     // Find type of this field and value info
     const fieldType = info.schema.getQueryType().getFields()[info.fieldName];
 
@@ -25,7 +30,7 @@ export const parseOrderByInfo = (orderBy: any, info: GraphQLResolveInfo) => {
 };
 
 
-const parseOrderByInfoNode = (orderBy: any, info: ObjectValueNode, type: GraphQLInputObjectType, prefix: string[] = []) => {
+const parseOrderByInfoNode = (orderBy: OrderByArgumentAsObject, info: ObjectValueNode, type: GraphQLInputObjectType, prefix: string[] = []) => {
     let result = [];
 
     for (const field of info.fields) {
@@ -38,7 +43,9 @@ const parseOrderByInfoNode = (orderBy: any, info: ObjectValueNode, type: GraphQL
         const fieldType = type.getFields()[fieldName].type;
 
         if (isInputObjectType(fieldType)) {
-            result = result.concat(parseOrderByInfoNode(orderBy[fieldName], field.value as ObjectValueNode, fieldType, [...prefix, fieldName]));
+            result = result.concat(
+                parseOrderByInfoNode(orderBy[fieldName] as OrderByArgumentAsObject, field.value as ObjectValueNode, fieldType, [...prefix, fieldName])
+            );
         } else {
             result.push([...prefix, fieldName, orderBy[fieldName]]);
         }

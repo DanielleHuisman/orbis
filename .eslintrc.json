@@ -13,9 +13,7 @@
     ],
     "rules": {
         "comma-dangle": ["error", "never"],
-        "indent": ["error", 4, {
-            "SwitchCase": 1
-        }],
+        "indent": "off",
         "max-len": ["error", 160],
         "new-cap": "off",
         "no-console": "error",
@@ -29,6 +27,12 @@
             "ts-ignore": "allow-with-description"
         }],
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/indent": ["error", 4, {
+            "SwitchCase": 1,
+            "ignoredNodes": [
+                "ClassBody.body > PropertyDefinition[decorators.length > 0] > .key"
+            ]
+        }],
         "@typescript-eslint/member-delimiter-style": ["error", {
             "multiline": {
                 "delimiter": "semi",

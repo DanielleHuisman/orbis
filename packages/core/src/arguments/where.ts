@@ -1,4 +1,4 @@
-import {Brackets, WhereExpression, SelectQueryBuilder, BaseEntity} from 'typeorm';
+import {BaseEntity, Brackets, SelectQueryBuilder, WhereExpressionBuilder} from 'typeorm';
 
 import {Orbis} from '../orbis';
 import {resolveFieldType} from '../fields';
@@ -10,6 +10,10 @@ import {relationPathToVarName} from './relations';
 
 export type WhereArgument = {
     [key: string]: boolean | IntFilter | FloatFilter | StringFilter | DateTimeFilter | EnumFilter | WhereArgument | WhereArgument[];
+};
+
+export type UniqueWhereArgument = {
+    [key: string]: boolean | number | string;
 };
 
 const OPERATORS: {[k: string]: string} = {
@@ -28,7 +32,7 @@ const OPERATOR_VALUE_MODIFIERS: {[k: string]: (value: string) => string} = {
     startsWith: (value) => `${value}%`,
     endsWith: (value) => `%${value}`
 };
-const CUSTOM_OPERATORS: {[k: string]: (qb: WhereExpression, varField: string, varValue: string, value: unknown) => void} = {
+const CUSTOM_OPERATORS: {[k: string]: (qb: WhereExpressionBuilder, varField: string, varValue: string, value: unknown) => void} = {
     equals: (q, varField, varValue, value) => {
         if (value === null) {
             q.andWhere(`${varField} IS NULL`);
@@ -59,8 +63,8 @@ const CUSTOM_OPERATORS: {[k: string]: (qb: WhereExpression, varField: string, va
     }
 };
 
-export const parseUniqueWhereArgument = (varName: string, qb: WhereExpression, where: any) => {
-    for (const [fieldName, fieldValue] of Object.entries(where) as [string, any][]) {
+export const parseUniqueWhereArgument = (varName: string, qb: WhereExpressionBuilder, where: UniqueWhereArgument) => {
+    for (const [fieldName, fieldValue] of Object.entries(where)) {
         qb.andWhere(`${varName}.${fieldName} = :${fieldName}`, {
             [fieldName]: fieldValue
         });
@@ -76,7 +80,7 @@ export const parseWhereArgument = (
     typeName: string,
     varPath: string,
     mainQb: SelectQueryBuilder<BaseEntity>,
-    qb: WhereExpression,
+    qb: WhereExpressionBuilder,
     where: WhereArgument,
     varNameIndices: VarIndices = {},
     varName: string = varPath
@@ -85,19 +89,21 @@ export const parseWhereArgument = (
         if (Object.keys(where).length > 1) {
             throw new Error('Keywords AND and OR can not be used in combination with each other or fields.');
         }
+        if (!Array.isArray(where.AND) || !Array.isArray(where.OR)) {
+            throw new Error('Keywords AND and OR need have an array as value.');
+        }
 
-        // TODO: potentially remove ugly AND and OR typing
         if (where.AND) {
-            for (const andWhere of where.AND as WhereArgument[]) {
+            for (const andWhere of where.AND) {
                 qb.andWhere(new Brackets((q) => parseWhereArgument(orbis, typeName, varPath, mainQb, q, andWhere, varNameIndices, varName)));
             }
         } else if (where.OR) {
-            for (const orWhere of where.OR as WhereArgument[]) {
+            for (const orWhere of where.OR) {
                 qb.orWhere(new Brackets((q) => parseWhereArgument(orbis, typeName, varPath, mainQb, q, orWhere, varNameIndices, varName)));
             }
         }
     } else {
-        for (const [fieldName, fieldValue] of Object.entries(where) as [string, any][]) {
+        for (const [fieldName, fieldValue] of Object.entries(where)) {
             if (!orbis.getMetadata().hasField(typeName, fieldName)) {
                 throw new Error(`Unknown input field "${fieldName}"`);
             }
@@ -149,7 +155,7 @@ export const parseWhereArgument = (
 
                 if (isEmbeddedEntity) {
                     // Parse where argument of the embedded entity relation
-                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValue, varNameIndices, fieldVarPath);
+                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValue as WhereArgument, varNameIndices, fieldVarPath);
                 } else {
                     // Determine relation variable name
                     const relationVarName = relationPathToVarName(fieldVarPath);
@@ -174,7 +180,7 @@ export const parseWhereArgument = (
                     mainQb.innerJoin(fieldVarPath, fieldVarName);
 
                     // Parse where argument of the relation
-                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValue, varNameIndices, fieldVarName);
+                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValue as WhereArgument, varNameIndices, fieldVarName);
                 }
             }
         }

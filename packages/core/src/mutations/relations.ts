@@ -1,3 +1,4 @@
+import {DataArgument, UniqueWhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {resolveFieldType} from '../fields';
 import {EntityMetadata} from '../metadata';
@@ -13,7 +14,11 @@ export const updateRelation = async <Entity>(
     orbis: Orbis,
     metadata: EntityMetadata,
     fieldName: string,
-    fieldValue: any,
+    fieldValue: {
+        create?: DataArgument;
+        connect?: UniqueWhereArgument;
+        disconnect?: UniqueWhereArgument;
+    },
     isUpdate: boolean = false,
     options: OperationOptions,
     entity?: Entity
@@ -51,7 +56,7 @@ export const updateRelation = async <Entity>(
 
     if (fieldValue.create) {
         // Create other entity
-        const identifier = await createEntity<Entity>(orbis, otherMetadata, {
+        const identifier = await createEntity(orbis, otherMetadata, {
             data: fieldValue.create
         }, {
             context: options.context

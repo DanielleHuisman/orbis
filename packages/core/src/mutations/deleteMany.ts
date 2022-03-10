@@ -4,7 +4,6 @@ import {EntityMetadata} from '../metadata';
 import {findMany, EntityList} from '../queries';
 import {OperationOptions} from '../util';
 
-// TODO: improve typing, might be the same as FindManyArguments
 export interface DeleteManyArguments {
     where?: WhereArgument;
     orderBy?: OrderByArgument;

@@ -81,27 +81,19 @@ export interface OperationOptions {
     context?: Context;
 }
 
-export type YupCommonSchema<T> = yup.Schema<T> & {
-    nullable(isNullable?: true): YupCommonSchema<T | null>;
-    nullable(isNullable: false): YupCommonSchema<Exclude<T, null>>;
-    nullable(isNullable?: boolean): YupCommonSchema<T>;
-    required(message?: yup.TestOptionsMessage): YupCommonSchema<Exclude<T, undefined>>;
-};
+export type SchemaFunction<ObjectType> = (
+    schema: YupObjectSchema<ObjectType>,
+    yupInstance: typeof yup
+) => YupObjectSchema<ObjectType>;
 
-export interface YupObjectSchema<T extends object | null | undefined = object> extends yup.ObjectSchema<T> {
+export type YupObjectSchema<T> = Omit<yup.ObjectSchema<T>, 'fields'> & {
     fields: {
         [k in keyof T]:
-            T[k] extends boolean ? yup.BooleanSchema<T[k]> :
+        T[k] extends boolean ? yup.BooleanSchema<T[k]> :
             T[k] extends number ? yup.NumberSchema<T[k]> :
-            T[k] extends string ? yup.StringSchema<T[k]> :
-            T[k] extends Date ? yup.DateSchema<T[k]> :
-            T[k] extends object ? yup.ObjectSchema<T[k]> :
-            yup.MixedSchema<T[k]>;
+                T[k] extends string ? yup.StringSchema<T[k]> :
+                    T[k] extends Date ? yup.DateSchema<T[k]> :
+                        T[k] extends object ? YupObjectSchema<T[k]> :
+                            yup.MixedSchema<T[k]>;
     };
-}
-
-export type SchemaFunction<ObjectType> = (
-    schema: YupObjectSchema<{
-        [k in keyof ObjectType]: ObjectType[k];
-    }>,
-    yupInstance: typeof yup) => yup.ObjectSchema;
+};

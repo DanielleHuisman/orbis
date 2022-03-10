@@ -8,6 +8,7 @@ import {generateNexusOutputFields} from './fields';
 import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata} from './metadata';
 import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
+
 export interface OrbisInterfaceOptions<InterfaceType> extends OrbisBaseOptions {
     schema?: SchemaFunction<InterfaceType>;
     resolveType?: AbstractTypeResolver<string>;

@@ -1,9 +1,11 @@
+
 import {AllNexusNamedTypeDefs, NexusExtendInputTypeDef, NexusExtendTypeDef, FieldResolver} from 'nexus/dist/core';
 import {ColumnMetadataArgs} from 'typeorm/metadata-args/ColumnMetadataArgs';
 import {RelationMetadataArgs} from 'typeorm/metadata-args/RelationMetadataArgs';
+import {ObjectSchema} from 'yup';
 
 import {WhereArgument} from './arguments';
-import {Constructor, Enum, SchemaFunction, YupObjectSchema} from './util';
+import {Constructor, Enum, SchemaFunction} from './util';
 
 /* Type definitions */
 export type TypeDef = AllNexusNamedTypeDefs | NexusExtendInputTypeDef<string> | NexusExtendTypeDef<string>;
@@ -89,7 +91,7 @@ export type TypeFunction = () => Type;
 
 /* Schemas */
 export interface Schemas {
-    [typeName: string]: YupObjectSchema;
+    [typeName: string]: ObjectSchema<unknown>;
 }
 
 /* Global */
@@ -246,7 +248,7 @@ export class OrbisMetadata {
         return this.schemas[typeName];
     }
 
-    addSchema(typeName: string, schema: YupObjectSchema) {
+    addSchema(typeName: string, schema: ObjectSchema<unknown>) {
         this.schemas[typeName] = schema;
     }
 

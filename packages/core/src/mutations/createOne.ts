@@ -1,6 +1,7 @@
 import {ObjectLiteral} from 'typeorm';
 import {RelationMetadata} from 'typeorm/metadata/RelationMetadata';
 
+import {DataArgument, UniqueWhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {EntityMetadata, EntityCreateMetadata} from '../metadata';
 import {findOne} from '../queries/findOne';
@@ -8,15 +9,14 @@ import {OperationOptions} from '../util';
 
 import {updateRelation} from './relations';
 
-// TODO: find a way to have correct data typing (typegen?)
 export interface CreateOneArguments {
-    data: {[key: string]: any};
+    data: DataArgument;
     relations?: string[];
 }
 
 interface ToManyRelation {
     fieldName: string;
-    fieldValue: any[];
+    fieldValue: DataArgument[];
     relationMetadata: RelationMetadata;
 }
 
@@ -30,12 +30,14 @@ const mergeCreateMetadata = (values: ObjectLiteral, create: EntityCreateMetadata
     }
 };
 
-export const createEntity = async <Entity>(
+// TODO: improve typing of return identity identifier
+
+export const createEntity = async (
     orbis: Orbis,
     metadata: EntityMetadata,
     args: CreateOneArguments,
     options: OperationOptions = {}
-): Promise<Entity> => {
+): Promise<UniqueWhereArgument> => {
     // Find entity repository
     const repository = orbis.getManager().getRepository(metadata.Entity);
 
@@ -58,18 +60,18 @@ export const createEntity = async <Entity>(
 
             if (relationMetadata.isOneToMany || relationMetadata.isManyToMany) {
                 if (!Array.isArray(fieldValue)) {
-                    throw new Error(`Value of relationship "${fieldName}" has to be an array.`);
+                    throw new Error(`Field "${fieldName}" has to be an array, but is "${typeof fieldValue}".`);
                 }
 
                 // These relations are handled after the entity is created
                 toManyRelations.push({
                     fieldName,
-                    fieldValue,
+                    fieldValue: fieldValue as DataArgument[],
                     relationMetadata
                 });
             } else {
-                if (Array.isArray(fieldValue)) {
-                    throw new Error(`Value of relationship "${fieldName}" can't be an array.`);
+                if (Array.isArray(fieldValue) || typeof fieldValue !== 'object' || fieldValue instanceof Date) {
+                    throw new Error(`Field "${fieldName}" has to be an object, but is "${Array.isArray(fieldValue) ? 'array' : typeof fieldValue}".`);
                 }
 
                 const identifier = await updateRelation(orbis, metadata, fieldName, fieldValue, false, {
@@ -106,7 +108,7 @@ export const createEntity = async <Entity>(
     const result = await qb.execute();
 
     // Get entity identifier from insert query
-    const identifier = result.identifiers[0] as Entity;
+    const identifier = result.identifiers[0] as UniqueWhereArgument;
 
     // Handle one-to-many and many-to-many relationships
     for (const {fieldName, fieldValue, relationMetadata} of toManyRelations) {
@@ -138,12 +140,12 @@ export const createOne = async <Entity>(
     args: CreateOneArguments,
     options: OperationOptions = {}
 ): Promise<Entity> => {
-    let identifier: any;
+    let identifier: UniqueWhereArgument;
 
     // Run create in a transaction
     await orbis.transaction(async () => {
         // Create entity
-        identifier = await createEntity<Entity>(orbis, metadata, args, {
+        identifier = await createEntity(orbis, metadata, args, {
             context: options.context
         });
     }, false);
