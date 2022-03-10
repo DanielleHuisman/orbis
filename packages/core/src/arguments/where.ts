@@ -12,6 +12,10 @@ export type WhereArgument = {
     [key: string]: boolean | IntFilter | FloatFilter | StringFilter | DateTimeFilter | EnumFilter | WhereArgument | WhereArgument[];
 };
 
+export type UniqueWhereArgument = {
+    [key: string]: boolean | number | string;
+};
+
 const OPERATORS: {[k: string]: string} = {
     equals: '=',
     not: '!=',
@@ -59,7 +63,7 @@ const CUSTOM_OPERATORS: {[k: string]: (qb: WhereExpressionBuilder, varField: str
     }
 };
 
-export const parseUniqueWhereArgument = (varName: string, qb: WhereExpressionBuilder, where: WhereArgument) => {
+export const parseUniqueWhereArgument = (varName: string, qb: WhereExpressionBuilder, where: UniqueWhereArgument) => {
     for (const [fieldName, fieldValue] of Object.entries(where)) {
         qb.andWhere(`${varName}.${fieldName} = :${fieldName}`, {
             [fieldName]: fieldValue
@@ -85,14 +89,16 @@ export const parseWhereArgument = (
         if (Object.keys(where).length > 1) {
             throw new Error('Keywords AND and OR can not be used in combination with each other or fields.');
         }
+        if (!Array.isArray(where.AND) || !Array.isArray(where.OR)) {
+            throw new Error('Keywords AND and OR need have an array as value.');
+        }
 
-        // TODO: potentially remove ugly AND and OR typing
         if (where.AND) {
-            for (const andWhere of where.AND as WhereArgument[]) {
+            for (const andWhere of where.AND) {
                 qb.andWhere(new Brackets((q) => parseWhereArgument(orbis, typeName, varPath, mainQb, q, andWhere, varNameIndices, varName)));
             }
         } else if (where.OR) {
-            for (const orWhere of where.OR as WhereArgument[]) {
+            for (const orWhere of where.OR) {
                 qb.orWhere(new Brackets((q) => parseWhereArgument(orbis, typeName, varPath, mainQb, q, orWhere, varNameIndices, varName)));
             }
         }

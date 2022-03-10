@@ -1,10 +1,10 @@
 import {Orbis} from '../orbis';
-import {parseRelations, parseUniqueWhereArgument, parseWhereArgument, WhereArgument} from '../arguments';
+import {parseRelations, parseUniqueWhereArgument, parseWhereArgument, UniqueWhereArgument} from '../arguments';
 import {EntityMetadata} from '../metadata';
 import {OperationOptions} from '../util';
 
 export interface FindOneArguments {
-    where: WhereArgument;
+    where: UniqueWhereArgument;
     relations?: string[];
 }
 

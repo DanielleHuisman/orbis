@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 import {Orbis} from './orbis';
 import {resolveFieldType} from './fields';
-import {isGeneratedField, YupCommonSchema} from './util';
+import {isGeneratedField} from './util';
 
 export const generateYupSchemas = (orbis: Orbis) => {
     // Generate Yup schemas for interfaces
@@ -13,7 +13,7 @@ export const generateYupSchemas = (orbis: Orbis) => {
 
         // Extend Yup schema if needed
         if (metadata.schema) {
-            schema = metadata.schema(schema, yup);
+            schema = metadata.schema(schema, yup) as yup.ObjectSchema<unknown>;
         }
 
         // Store schema
@@ -34,16 +34,18 @@ export const generateYupSchemas = (orbis: Orbis) => {
 
         // Extend Yup schema if needed
         if (metadata.schema) {
-            schema = metadata.schema(schema, yup);
+            schema = metadata.schema(schema, yup) as yup.ObjectSchema<unknown>;
         }
 
         // Store schema
         orbis.getMetadata().addSchema(name, schema);
     }
 
+    yup.object();
+
     // Add nested schemas for embedded entities
     for (const name of Object.keys(orbis.getMetadata().getObjects())) {
-        const shape: yup.ObjectSchemaDefinition<object> = {};
+        const shape = {};
 
         if (orbis.getMetadata().hasFields(name)) {
             for (const [fieldName, field] of Object.entries(orbis.getMetadata().getFields(name))) {
@@ -80,8 +82,8 @@ export const generateYupSchemas = (orbis: Orbis) => {
     }
 };
 
-export const generateYupSchema = (orbis: Orbis, typeName: string, schema: yup.ObjectSchema) => {
-    const shape: yup.ObjectSchemaDefinition<object> = {};
+export const generateYupSchema = (orbis: Orbis, typeName: string, schema: yup.ObjectSchema<unknown>) => {
+    const shape = {};
 
     if (orbis.getMetadata().hasFields(typeName)) {
         for (const [fieldName, field] of Object.entries(orbis.getMetadata().getFields(typeName))) {
@@ -90,7 +92,7 @@ export const generateYupSchema = (orbis: Orbis, typeName: string, schema: yup.Ob
             }
 
             let type = resolveFieldType(field);
-            let fieldShape: YupCommonSchema<unknown> = null;
+            let fieldShape: yup.Schema = null;
             let isArray = false;
 
             if (Array.isArray(type)) {

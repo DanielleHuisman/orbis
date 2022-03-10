@@ -1,11 +1,11 @@
-import {WhereArgument} from '../arguments';
+import {UniqueWhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
 import {findOne} from '../queries/findOne';
 import {OperationOptions} from '../util';
 
 export interface DeleteOneArguments {
-    where: WhereArgument;
+    where: UniqueWhereArgument;
     relations?: string[];
 }
 

@@ -54,7 +54,7 @@ export class OrbisEmail extends OrbisModule<OrbisEmailOptions> {
 
     async send<T>(email: EmailTemplates.EmailOptions<T>) {
         const changeTemplate = this.getOption('changeTemplate');
-        const template = changeTemplate ? changeTemplate(email.template, email.locals) : email.template;
+        const template = email.template && changeTemplate ? changeTemplate(email.template, email.locals) : email.template;
 
         return await this.templates.send({
             ...email,

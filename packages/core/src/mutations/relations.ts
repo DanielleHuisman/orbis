@@ -1,4 +1,4 @@
-import {DataArgument, WhereArgument} from '../arguments';
+import {DataArgument, UniqueWhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {resolveFieldType} from '../fields';
 import {EntityMetadata} from '../metadata';
@@ -16,8 +16,8 @@ export const updateRelation = async <Entity>(
     fieldName: string,
     fieldValue: {
         create?: DataArgument;
-        connect?: WhereArgument;
-        disconnect?: WhereArgument;
+        connect?: UniqueWhereArgument;
+        disconnect?: UniqueWhereArgument;
     },
     isUpdate: boolean = false,
     options: OperationOptions,

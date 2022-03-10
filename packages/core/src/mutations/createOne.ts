@@ -1,7 +1,7 @@
 import {ObjectLiteral} from 'typeorm';
 import {RelationMetadata} from 'typeorm/metadata/RelationMetadata';
 
-import {DataArgument, WhereArgument} from '../arguments';
+import {DataArgument, UniqueWhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {EntityMetadata, EntityCreateMetadata} from '../metadata';
 import {findOne} from '../queries/findOne';
@@ -37,7 +37,7 @@ export const createEntity = async (
     metadata: EntityMetadata,
     args: CreateOneArguments,
     options: OperationOptions = {}
-): Promise<WhereArgument> => {
+): Promise<UniqueWhereArgument> => {
     // Find entity repository
     const repository = orbis.getManager().getRepository(metadata.Entity);
 
@@ -66,11 +66,11 @@ export const createEntity = async (
                 // These relations are handled after the entity is created
                 toManyRelations.push({
                     fieldName,
-                    fieldValue,
+                    fieldValue: fieldValue as DataArgument[],
                     relationMetadata
                 });
             } else {
-                if (Array.isArray(fieldValue) || typeof fieldValue !== 'object') {
+                if (Array.isArray(fieldValue) || typeof fieldValue !== 'object' || fieldValue instanceof Date) {
                     throw new Error(`Field "${fieldName}" has to be an object, but is "${Array.isArray(fieldValue) ? 'array' : typeof fieldValue}".`);
                 }
 
@@ -108,7 +108,7 @@ export const createEntity = async (
     const result = await qb.execute();
 
     // Get entity identifier from insert query
-    const identifier = result.identifiers[0] as WhereArgument;
+    const identifier = result.identifiers[0] as UniqueWhereArgument;
 
     // Handle one-to-many and many-to-many relationships
     for (const {fieldName, fieldValue, relationMetadata} of toManyRelations) {
@@ -140,7 +140,7 @@ export const createOne = async <Entity>(
     args: CreateOneArguments,
     options: OperationOptions = {}
 ): Promise<Entity> => {
-    let identifier: WhereArgument;
+    let identifier: UniqueWhereArgument;
 
     // Run create in a transaction
     await orbis.transaction(async () => {

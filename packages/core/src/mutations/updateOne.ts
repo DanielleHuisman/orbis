@@ -1,4 +1,4 @@
-import {DataArgument, WhereArgument} from '../arguments';
+import {DataArgument, UniqueWhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
 import {findOne} from '../queries/findOne';
@@ -7,7 +7,7 @@ import {OperationOptions} from '../util';
 import {updateRelation} from './relations';
 
 export interface UpdateOneArguments {
-    where: WhereArgument;
+    where: UniqueWhereArgument;
     data: DataArgument;
     relations?: string[];
 }
@@ -33,12 +33,12 @@ export const updateEntity = async <Entity>(
     for (const [fieldName, fieldValue] of Object.entries(args.data)) {
         if (metadata.relations.includes(fieldName)) {
             if (Array.isArray(fieldValue)) {
-                for (const value of fieldValue) {
+                for (const value of fieldValue as DataArgument[]) {
                     await updateRelation<Entity>(orbis, metadata, fieldName, value, true, {
                         context: options.context
                     }, entity);
                 }
-            } else if (typeof fieldValue === 'object') {
+            } else if (typeof fieldValue === 'object' && !(fieldValue instanceof Date)) {
                 await updateRelation<Entity>(orbis, metadata, fieldName, fieldValue, true, {
                     context: options.context
                 }, entity);
