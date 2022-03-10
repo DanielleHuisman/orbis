@@ -1,11 +1,11 @@
+import {WhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
 import {findOne} from '../queries/findOne';
 import {OperationOptions} from '../util';
 
-// TODO: improve typing, might be the same of FindOneArguments
 export interface DeleteOneArguments {
-    where: {[key: string]: any};
+    where: WhereArgument;
     relations?: string[];
 }
 

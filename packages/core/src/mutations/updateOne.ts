@@ -1,3 +1,4 @@
+import {DataArgument, WhereArgument} from '../arguments';
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
 import {findOne} from '../queries/findOne';
@@ -5,11 +6,9 @@ import {OperationOptions} from '../util';
 
 import {updateRelation} from './relations';
 
-// TODO: find a way to have correct where and data typing (typegen?)
-// Data might be similar to CreateOneArguments
 export interface UpdateOneArguments {
-    where: {[key: string]: any};
-    data: {[key: string]: any};
+    where: WhereArgument;
+    data: DataArgument;
     relations?: string[];
 }
 
@@ -34,15 +33,17 @@ export const updateEntity = async <Entity>(
     for (const [fieldName, fieldValue] of Object.entries(args.data)) {
         if (metadata.relations.includes(fieldName)) {
             if (Array.isArray(fieldValue)) {
-                for (const value of fieldValue as any[]) {
+                for (const value of fieldValue) {
                     await updateRelation<Entity>(orbis, metadata, fieldName, value, true, {
                         context: options.context
                     }, entity);
                 }
-            } else {
+            } else if (typeof fieldValue === 'object') {
                 await updateRelation<Entity>(orbis, metadata, fieldName, fieldValue, true, {
                     context: options.context
                 }, entity);
+            } else {
+                throw new Error(`Field "${fieldName}" has to be an array or object, but is "${typeof fieldValue}".`);
             }
         } else {
             values[fieldName] = fieldValue;

@@ -1,11 +1,10 @@
 import {Orbis} from '../orbis';
-import {parseRelations, parseUniqueWhereArgument, parseWhereArgument} from '../arguments';
+import {parseRelations, parseUniqueWhereArgument, parseWhereArgument, WhereArgument} from '../arguments';
 import {EntityMetadata} from '../metadata';
 import {OperationOptions} from '../util';
 
-// TODO: find a way to have correct unique where typing (typegen?)
 export interface FindOneArguments {
-    where: {[key: string]: any};
+    where: WhereArgument;
     relations?: string[];
 }
 
