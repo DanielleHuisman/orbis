@@ -89,15 +89,20 @@ export const parseWhereArgument = (
         if (Object.keys(where).length > 1) {
             throw new Error('Keywords AND and OR can not be used in combination with each other or fields.');
         }
-        if (!Array.isArray(where.AND) || !Array.isArray(where.OR)) {
-            throw new Error('Keywords AND and OR need have an array as value.');
-        }
 
         if (where.AND) {
+            if (!Array.isArray(where.AND)) {
+                throw new Error('Keyword AND needs have an array as value.');
+            }
+
             for (const andWhere of where.AND) {
                 qb.andWhere(new Brackets((q) => parseWhereArgument(orbis, typeName, varPath, mainQb, q, andWhere, varNameIndices, varName)));
             }
         } else if (where.OR) {
+            if (!Array.isArray(where.OR)) {
+                throw new Error('Keyword OR need have an array as value.');
+            }
+
             for (const orWhere of where.OR) {
                 qb.orWhere(new Brackets((q) => parseWhereArgument(orbis, typeName, varPath, mainQb, q, orWhere, varNameIndices, varName)));
             }
