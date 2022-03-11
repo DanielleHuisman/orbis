@@ -16,14 +16,14 @@ jobs:
         node: ['14', '16']
     name: Test Node.js v${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
       - run: yarn
       - run: yarn run lerna bootstrap
       - run: yarn run lint:ci
       - run: yarn run test:ci
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v2
         with:
           directory: coverage
