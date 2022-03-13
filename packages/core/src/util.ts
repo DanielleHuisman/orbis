@@ -14,37 +14,24 @@ export type Enum = {
 
 export type Relation<Type> = Promise<Type> | Type;
 
-export const hasPrototype = (obj: unknown, prototype: Constructor<unknown>) => {
+export const firstLower = (text: string) => `${text.substring(0, 1).toLowerCase()}${text.substring(1)}`;
+export const firstUpper = (text: string) => `${text.substring(0, 1).toUpperCase()}${text.substring(1)}`;
+
+export const hasPrototype = (obj: unknown, prototype: Constructor<unknown>): boolean => {
     const p = Object.getPrototypeOf(obj);
-    return p === prototype || (p && hasPrototype(p, prototype));
+    return p === prototype || (!!p && hasPrototype(p, prototype));
 };
 
 export const fixNullPrototypes = (data: unknown) => {
     for (const value of Object.values(data)) {
-        // @ts-ignore: TypeScript doesn't allow __proto__ to be accessed
-        if (typeof value === 'object' && value && value.__proto__ === undefined) {
-            Object.setPrototypeOf(value, {});
+        if (typeof value === 'object' && value) {
+            if (value.__proto__ === undefined) {
+                Object.setPrototypeOf(value, {});
+            }
 
             fixNullPrototypes(value);
         }
     }
-};
-
-export const firstLower = (text: string) => `${text.substring(0, 1).toLowerCase()}${text.substring(1)}`;
-export const firstUpper = (text: string) => `${text.substring(0, 1).toUpperCase()}${text.substring(1)}`;
-
-export const shouldGenerateField = (orbis: Orbis, typeName: string, type: 'query' | 'mutation', field: string) => {
-    const entity = orbis.getMetadata().getEntity(typeName);
-    if (entity[type]) {
-        return entity[type][field] !== false;
-    }
-
-    const globalEntityMetadata = orbis.getOption('entity', {});
-    if (globalEntityMetadata[type]) {
-        return globalEntityMetadata[type][field] !== false;
-    }
-
-    return true;
 };
 
 export const isEntity = (target: Constructor<unknown>) =>
@@ -64,6 +51,20 @@ export const isGeneratedField = (field: FieldMetadata) => {
     }
 
     return false;
+};
+
+export const shouldGenerateField = (orbis: Orbis, typeName: string, type: 'query' | 'mutation', field: string) => {
+    const entity = orbis.getMetadata().getEntity(typeName);
+    if (entity[type]) {
+        return entity[type][field] !== false;
+    }
+
+    const globalEntityMetadata = orbis.getOption('entity', {});
+    if (globalEntityMetadata[type]) {
+        return globalEntityMetadata[type][field] !== false;
+    }
+
+    return true;
 };
 
 export type Context = GetGen<'context'>;
