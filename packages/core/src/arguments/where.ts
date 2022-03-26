@@ -202,6 +202,8 @@ export const parseWhereArgument = (
                         } else {
                             relationWhere = fieldValueWhere.matches as WhereArgument;
                         }
+                    } else {
+                        relationWhere = fieldValueWhere;
                     }
 
                     if (relationWhere) {
