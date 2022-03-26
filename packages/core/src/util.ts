@@ -21,7 +21,6 @@ export const hasPrototype = (obj: unknown, prototype: Constructor<unknown>) => {
 
 export const fixNullPrototypes = (data: unknown) => {
     for (const value of Object.values(data)) {
-        // @ts-ignore: TypeScript doesn't allow __proto__ to be accessed
         if (typeof value === 'object' && value && value.__proto__ === undefined) {
             Object.setPrototypeOf(value, {});
 

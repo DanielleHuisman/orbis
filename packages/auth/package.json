@@ -47,8 +47,8 @@
         "@types/jsonwebtoken": "^8.5.8",
         "@types/randomstring": "^1.1.8",
         "bcrypt": "^5.0.1",
-        "google-auth-library": "^7.14.0",
-        "googleapis": "97.0.0",
+        "google-auth-library": "^7.14.1",
+        "googleapis": "99.0.0",
         "jsonwebtoken": "^8.5.1",
         "moment": "^2.29.1",
         "randomstring": "^1.2.2"

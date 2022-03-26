@@ -43,7 +43,7 @@
     "dependencies": {
         "@types/pluralize": "^0.0.29",
         "graphql": "^16.3.0",
-        "graphql-scalars": "^1.15.0",
+        "graphql-scalars": "^1.16.0",
         "pluralize": "^8.0.0",
         "yup": "^1.0.0-beta.3"
     },
