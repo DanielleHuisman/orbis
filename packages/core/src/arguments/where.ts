@@ -155,13 +155,19 @@ export const parseWhereArgument = (
                     varNameIndices[fieldName]++;
                 }
             } else {
+                const fieldValueWhere = fieldValue as WhereArgument;
+
                 // Check if the relation is an actual entity or embedded entity
                 const isEmbeddedEntity = !orbis.getMetadata().hasEntity(fieldType.name);
 
                 if (isEmbeddedEntity) {
                     // Parse where argument of the embedded entity relation
-                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValue as WhereArgument, varNameIndices, fieldVarPath);
+                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValueWhere, varNameIndices, fieldVarPath);
                 } else {
+                    if (!field.relation) {
+                        throw new Error(`Field "${fieldName}" is not a relation.`);
+                    }
+
                     // Determine relation variable name
                     const relationVarName = relationPathToVarName(fieldVarPath);
 
@@ -184,8 +190,23 @@ export const parseWhereArgument = (
                     // Join the relation
                     mainQb.innerJoin(fieldVarPath, fieldVarName);
 
+                    // TODO: handle other relation types (see inputObjects)
+
                     // Parse where argument of the relation
-                    parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, fieldValue as WhereArgument, varNameIndices, fieldVarName);
+                    let relationWhere: WhereArgument | null;
+                    if (field.relation.relationType === 'many-to-one') {
+                        if (fieldValueWhere.isNull) {
+                            qb.andWhere(`${varName}.${fieldName} IS NULL`);
+                        } else if (fieldValueWhere.notIsNull) {
+                            qb.andWhere(`${varName}.${fieldName} IS NOT NULL`);
+                        } else {
+                            relationWhere = fieldValueWhere.matches as WhereArgument;
+                        }
+                    }
+
+                    if (relationWhere) {
+                        parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, relationWhere, varNameIndices, fieldVarName);
+                    }
                 }
             }
         }
