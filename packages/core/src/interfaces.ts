@@ -10,7 +10,7 @@ import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
 
 export interface OrbisInterfaceOptions<InterfaceType> extends OrbisBaseOptions {
-    schema?: SchemaFunction<InterfaceType>;
+    schema?: SchemaFunction<Omit<InterfaceType, keyof BaseEntity>>;
     resolveType?: AbstractTypeResolver<string>;
     query?: EntityQueryMetadata;
     mutation?: EntityMutationMetadata;
