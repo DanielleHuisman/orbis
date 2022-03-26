@@ -1,7 +1,5 @@
 {
     "extends": [
-        "config:js-lib",
-        "group:allNonMajor",
-        "schedule:weekly"
+        "config:js-lib"
     ]
 }
