@@ -16,9 +16,3 @@ export * from './schema';
 export * from './types';
 export * from './unions';
 export * from './util';
-
-// Export default Orbis instance under convenient name
-import {defaultOrbis} from './orbis';
-export {
-    defaultOrbis as orbis
-};

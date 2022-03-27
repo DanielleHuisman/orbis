@@ -1,4 +1,4 @@
-import {getConnection, Connection, EntityManager} from 'typeorm';
+import {DataSource, EntityManager} from 'typeorm';
 
 import {registerEnumType, OrbisEnumOptions} from './enums';
 import {registerField, OrbisField, OrbisFieldArguments, OrbisFieldOptions} from './fields';
@@ -15,7 +15,7 @@ import {registerUnionType, OrbisUnionOptions} from './unions';
 import {Constructor, OperationOptions} from './util';
 
 export interface OrbisOptions {
-    connection?: Connection;
+    dataSource?: DataSource;
 
     entity?: GlobalEntityMetadata;
 }
@@ -51,15 +51,15 @@ export class Orbis {
         };
     }
 
-    getConnection() {
-        if (!this.options.connection) {
-            this.options.connection = getConnection();
+    getDataSource() {
+        if (!this.options.dataSource) {
+            throw new Error('No TypeORM DataSource provided in options.');
         }
-        return this.options.connection;
+        return this.options.dataSource;
     }
 
     getManager() {
-        return this.currentManager || this.getConnection().manager;
+        return this.currentManager || this.getDataSource().manager;
     }
 
     getMetadata() {
@@ -206,7 +206,7 @@ export class Orbis {
             return await operation();
         } else {
             // Create query runner
-            const queryRunner = this.getConnection().createQueryRunner();
+            const queryRunner = this.getDataSource().createQueryRunner();
 
             // Change entity manager
             const oldManager = this.currentManager;
@@ -281,7 +281,4 @@ export class Orbis {
     }
 }
 
-// Default Orbis instance
-export const defaultOrbis = new Orbis();
-
-export const getOrbis = (options: OrbisBaseOptions) => options.orbis || defaultOrbis;
+export const getOrbis = (options: OrbisBaseOptions) => options.orbis;
