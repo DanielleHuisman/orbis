@@ -1,7 +1,8 @@
 {
     "globals": {
         "ts-jest": {
-            "tsconfig": "tsconfig.json"
+            "tsconfig": "tsconfig.json",
+            "useESM": true
         }
     },
     "preset": "ts-jest",
