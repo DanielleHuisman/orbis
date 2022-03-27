@@ -30,7 +30,7 @@ export class Orbis {
     private repositories: {[k: string]: Repository<unknown>} = {};
     private modules: OrbisModule<unknown>[] = [];
 
-    private currentManager: EntityManager = null;
+    private currentManager: EntityManager;
 
     constructor(options: OrbisOptions = {}) {
         this.options = options;
@@ -40,6 +40,7 @@ export class Orbis {
         return this.options;
     }
 
+    getOption<T extends keyof OrbisOptions>(name: T, defaultValue: OrbisOptions[T]): NonNullable<OrbisOptions[T]>;
     getOption<T extends keyof OrbisOptions>(name: T, defaultValue?: OrbisOptions[T]) {
         return this.options[name] === undefined ? defaultValue : this.options[name];
     }
@@ -264,15 +265,15 @@ export class Orbis {
         return this.getRepository(entityType).findMany(args, options);
     }
 
-    createOne<Entity>(entityType: string | Constructor<Entity>, args?: CreateOneArguments, options?: OperationOptions) {
+    createOne<Entity>(entityType: string | Constructor<Entity>, args: CreateOneArguments, options?: OperationOptions) {
         return this.getRepository(entityType).createOne(args, options);
     }
 
-    updateOne<Entity>(entityType: string | Constructor<Entity>, args?: UpdateOneArguments, options?: OperationOptions) {
+    updateOne<Entity>(entityType: string | Constructor<Entity>, args: UpdateOneArguments, options?: OperationOptions) {
         return this.getRepository(entityType).updateOne(args, options);
     }
 
-    deleteOne<Entity>(entityType: string | Constructor<Entity>, args?: DeleteOneArguments, options?: OperationOptions) {
+    deleteOne<Entity>(entityType: string | Constructor<Entity>, args: DeleteOneArguments, options?: OperationOptions) {
         return this.getRepository(entityType).deleteOne(args, options);
     }
 
@@ -281,4 +282,9 @@ export class Orbis {
     }
 }
 
-export const getOrbis = (options: OrbisBaseOptions) => options.orbis;
+export const getOrbis = (options: OrbisBaseOptions) => {
+    if (!options.orbis) {
+        throw new Error('No Orbis instance provided in options.');
+    }
+    return options.orbis;
+};

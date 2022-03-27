@@ -3,7 +3,7 @@
     "coverageDirectory": "coverage",
     "globals": {
         "ts-jest": {
-            "tsconfig": "tsconfig.jest.json",
+            "tsconfig": "tsconfig.json",
             "useESM": true
         }
     },

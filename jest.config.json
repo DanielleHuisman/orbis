@@ -9,5 +9,8 @@
     "setupFilesAfterEnv": ["jest-extended"],
     "testEnvironment": "node",
     "testPathIgnorePatterns": ["/node_modules/", "/dist/"],
-    "verbose": true
+    "verbose": true,
+    "moduleNameMapper": {
+        "^@orbis-framework/(.+)$": "<rootDir>/packages/$1/src"
+    }
 }
