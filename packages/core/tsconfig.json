@@ -3,10 +3,5 @@
     "compilerOptions": {
         "rootDir": "src",
         "outDir": "dist",
-
-        "esModuleInterop": true,
-
-        "noImplicitAny": false,
-        "strictNullChecks": false
     }
 }

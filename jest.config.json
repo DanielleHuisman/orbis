@@ -1,12 +1,16 @@
 {
     "globals": {
         "ts-jest": {
-            "tsconfig": "tsconfig.json"
+            "tsconfig": "tsconfig.json",
+            "useESM": true
         }
     },
     "preset": "ts-jest",
     "setupFilesAfterEnv": ["jest-extended"],
     "testEnvironment": "node",
     "testPathIgnorePatterns": ["/node_modules/", "/dist/"],
-    "verbose": true
+    "verbose": true,
+    "moduleNameMapper": {
+        "^@orbis-framework/(.+)$": "<rootDir>/packages/$1/src"
+    }
 }

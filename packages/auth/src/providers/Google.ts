@@ -13,9 +13,7 @@ export class ProviderGoogle extends ProviderTypeOAuth<ProviderGoogleOptions> {
     constructor(options: ProviderGoogleOptions) {
         super('google', options);
 
-        // @ts-expect-error: redirectUri has incorrect typing in OAuth2Client
         this.auth = new google.auth.OAuth2(options);
-        // @ts-expect-error: redirectUri has incorrect typing in OAuth2Client
         this.oauth = google.oauth2({
             auth: this.auth,
             version: 'v2'

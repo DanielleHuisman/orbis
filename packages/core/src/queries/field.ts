@@ -42,13 +42,20 @@ export const generateNexusRelationListField = (
             }
 
             // Find entity and relation metadata
-            const entityMetadata = orbis.getConnection().entityMetadatas.find((e) => e.name === typeName);
+            const entityMetadata = orbis.getDataSource().entityMetadatas.find((e) => e.name === typeName);
             const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
 
             // Generate where argument for the relation
             // TODO: ID might not be a primary key
+            // TODO: handle different relation types (see inputObjects)
             let whereList: WhereArgument[] = [{
-                [relationMetadata.inverseRelation.propertyName]: {
+                [relationMetadata.inverseRelation.propertyName]: relationMetadata.relationType === 'one-to-many' ? {
+                    matches: {
+                        id: {
+                            equals: root.id
+                        }
+                    }
+                } : {
                     id: {
                         equals: root.id
                     }
