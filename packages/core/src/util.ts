@@ -1,3 +1,6 @@
+import path from 'path';
+import {readdir} from 'fs/promises';
+import {fileURLToPath} from 'url';
 import {ArgsValue, GetGen} from 'nexus/dist/core';
 import {GraphQLResolveInfo} from 'graphql';
 import {getMetadataArgsStorage, BaseEntity} from 'typeorm';
@@ -35,11 +38,13 @@ export const firstUpper = (text: string) => `${text.substring(0, 1).toUpperCase(
 export const shouldGenerateField = (orbis: Orbis, typeName: string, type: 'query' | 'mutation', field: string) => {
     const entity = orbis.getMetadata().getEntity(typeName);
     if (entity[type]) {
+        // @ts-expect-error: no index signature
         return entity[type][field] !== false;
     }
 
     const globalEntityMetadata = orbis.getOption('entity', {});
     if (globalEntityMetadata[type]) {
+        // @ts-expect-error: no index signature
         return globalEntityMetadata[type][field] !== false;
     }
 
@@ -63,6 +68,25 @@ export const isGeneratedField = (field: FieldMetadata) => {
     }
 
     return false;
+};
+
+export const findEntities = (possibleEntities: (unknown[] | Record<string, unknown>)[]): Function[] =>
+    possibleEntities
+        .flatMap((possible) => typeof possible == 'object' ? Object.values(possible) : possible)
+        .filter((possibleEntity) => typeof possibleEntity === 'function') as Function[];
+
+export const findMigrations = async (url: string, name = 'migrations') => {
+    let migrations: Function[] = [];
+
+    const directory = path.dirname(fileURLToPath(url));
+    const files = await readdir(path.join(directory, name));
+
+    for (const file of files) {
+        const module = await import(path.join(directory, name, file));
+        migrations = migrations.concat(Object.values(module).filter((value) => typeof value === 'function') as Function[]);
+    }
+
+    return migrations;
 };
 
 export type Context = GetGen<'context'>;
