@@ -1,7 +1,7 @@
 {
     "name": "@orbis-framework/auth",
     "description": "Authentication module for Orbis.",
-    "version": "0.2.7",
+    "version": "0.3.0",
     "license": "MIT",
     "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
     "repository": {
@@ -20,8 +20,9 @@
     "publishConfig": {
         "access": "public"
     },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "type": "module",
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
         "dist",
         "LICENSE.md",
@@ -40,22 +41,22 @@
     "peerDependencies": {
         "@orbis-framework/core": ">=0.0.1",
         "@orbis-framework/email": ">=0.0.1",
-        "typeorm": ">=0.2.23"
+        "typeorm": ">=0.3.4"
     },
     "dependencies": {
         "@types/bcrypt": "^5.0.0",
         "@types/jsonwebtoken": "^8.5.8",
         "@types/randomstring": "^1.1.8",
         "bcrypt": "^5.0.1",
-        "google-auth-library": "^7.14.0",
-        "googleapis": "97.0.0",
+        "google-auth-library": "^7.14.1",
+        "googleapis": "^99.0.0",
         "jsonwebtoken": "^8.5.1",
         "moment": "^2.29.1",
         "randomstring": "^1.2.2"
     },
     "devDependencies": {
-        "@orbis-framework/core": "^0.2.7",
-        "@orbis-framework/email": "^0.2.7",
-        "typeorm": "0.2.45"
+        "@orbis-framework/core": "^0.3.0",
+        "@orbis-framework/email": "^0.3.0",
+        "typeorm": "0.3.4"
     }
 }

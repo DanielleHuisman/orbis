@@ -1,7 +1,7 @@
 {
     "name": "@orbis-framework/email",
     "description": "Email module for Orbis.",
-    "version": "0.2.7",
+    "version": "0.3.0",
     "license": "MIT",
     "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
     "repository": {
@@ -19,8 +19,9 @@
     "publishConfig": {
         "access": "public"
     },
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "type": "module",
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
         "dist",
         "LICENSE.md",
@@ -41,10 +42,10 @@
     },
     "dependencies": {
         "@types/email-templates": "^8.0.4",
-        "email-templates": "^8.0.9",
-        "nodemailer": "^6.7.2"
+        "email-templates": "^9.0.0",
+        "nodemailer": "^6.7.3"
     },
     "devDependencies": {
-        "@orbis-framework/core": "^0.2.7"
+        "@orbis-framework/core": "^0.3.0"
     }
 }

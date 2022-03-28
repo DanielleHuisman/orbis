@@ -3,17 +3,17 @@ name: test
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        node: ['14', '16']
+        node: ['16', '17']
     name: Test Node.js v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3

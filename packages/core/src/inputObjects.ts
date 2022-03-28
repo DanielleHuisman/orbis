@@ -109,7 +109,16 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                                 type: 'DateTimeFilter'
                             });
                         } else if (typeof type === 'function') {
-                            const whereType = generateNexusWhereInputObject(orbis, type, type.name);
+                            let whereType: NexusInputObjectTypeDef<string>;
+
+                            // TODO: this should probably also happen for one-to-one relations
+                            // TODO: add an additional case for list relation (one-to-many and many-to-many) to support e.g. exists, notExists queries
+                            if (field.relation && field.relation.relationType === 'many-to-one') {
+                                whereType = generateNexusRelationWhereInputObject(orbis, type, type.name);
+                            } else {
+                                whereType = generateNexusWhereInputObject(orbis, type, type.name);
+                            }
+
                             definition.field(fieldName, {
                                 type: whereType
                             });
@@ -321,6 +330,23 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
 
                 currentTarget = Object.getPrototypeOf(currentTarget);
             }
+        }
+    }));
+};
+
+export const generateNexusRelationWhereInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string) => {
+    const name = `${typeName}RelationWhereInput`;
+
+    const whereType = generateNexusWhereInputObject(orbis, target, typeName);
+
+    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+        name,
+        definition(t) {
+            t.nullable.boolean('isNull');
+            t.nullable.boolean('notIsNull');
+            t.nullable.field('matches', {
+                type: whereType
+            });
         }
     }));
 };

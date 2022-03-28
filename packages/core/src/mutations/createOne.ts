@@ -42,7 +42,7 @@ export const createEntity = async (
     const repository = orbis.getManager().getRepository(metadata.Entity);
 
     // Find entity metadata
-    const entityMetadata = orbis.getConnection().entityMetadatas.find((e) => e.name === metadata.Entity.name);
+    const entityMetadata = orbis.getDataSource().entityMetadatas.find((e) => e.name === metadata.Entity.name);
 
     // Create insert query builder
     const qb = repository

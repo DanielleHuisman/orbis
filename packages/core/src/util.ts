@@ -14,14 +14,13 @@ export type Enum = {
 
 export type Relation<Type> = Promise<Type> | Type;
 
-export const hasPrototype = (obj: unknown, prototype: Constructor<unknown>) => {
+export const hasPrototype = (obj: unknown, prototype: Constructor<unknown>): boolean => {
     const p = Object.getPrototypeOf(obj);
     return p === prototype || (p && hasPrototype(p, prototype));
 };
 
-export const fixNullPrototypes = (data: unknown) => {
+export const fixNullPrototypes = (data: object) => {
     for (const value of Object.values(data)) {
-        // @ts-ignore: TypeScript doesn't allow __proto__ to be accessed
         if (typeof value === 'object' && value && value.__proto__ === undefined) {
             Object.setPrototypeOf(value, {});
 
