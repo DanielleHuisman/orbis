@@ -25,7 +25,7 @@
         "build": "yarn run --cwd=packages/core build:ts && lerna run --parallel build:ts"
     },
     "devDependencies": {
-        "@types/jest": "27.5.0",
+        "@types/jest": "27.5.1",
         "@types/node": "17.0.23",
         "@typescript-eslint/eslint-plugin": "5.25.0",
         "@typescript-eslint/parser": "5.25.0",
