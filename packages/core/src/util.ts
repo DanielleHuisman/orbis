@@ -87,6 +87,11 @@ export const findMigrations = async (url: string, name = 'migrations') => {
     return migrations;
 };
 
+export const findSubscribers = (possibleSubscribers: (unknown[] | Record<string, unknown>)[]): Function[] =>
+    possibleSubscribers
+        .flatMap((possible) => typeof possible == 'object' ? Object.values(possible) : possible)
+        .filter((possibleSubscriber) => typeof possibleSubscriber === 'function') as Function[];
+
 export type Context = nexus.GetGen<'context'>;
 
 export type EntityFieldResolver<Type, Options = Record<string, unknown>> = (
