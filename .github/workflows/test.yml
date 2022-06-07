@@ -10,10 +10,10 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['16', '17']
+        node: ['16', '18']
     name: Test Node.js v${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
