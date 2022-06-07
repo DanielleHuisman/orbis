@@ -1,3 +1,5 @@
+import {EntityManager} from 'typeorm';
+
 import {Orbis} from './orbis';
 import {EntityMetadata} from './metadata';
 import {
@@ -31,7 +33,7 @@ export class Repository<Entity> {
         this.metadata = metadata;
     }
 
-    transaction<Result>(operation: () => Promise<Result>): Promise<Result> {
+    transaction<Result>(operation: (manager: EntityManager) => Promise<Result>): Promise<Result> {
         return this.orbis.transaction(operation);
     }
 

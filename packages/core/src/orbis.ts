@@ -200,14 +200,14 @@ export class Orbis {
         this.metadata.merge(other.getMetadata());
     }
 
-    async transaction<Result>(operation: () => Promise<Result>, errorOnActiveTransaction: boolean = true): Promise<Result> {
+    async transaction<Result>(operation: (manager: EntityManager) => Promise<Result>, errorOnActiveTransaction: boolean = true): Promise<Result> {
         // Check if a transaction is already active
         if (this.currentManager) {
             if (errorOnActiveTransaction) {
                 throw new Error('A transaction is already active, only one transaction can be active at the same time.');
             }
 
-            return await operation();
+            return await operation(this.currentManager);
         } else {
             // Create query runner
             const queryRunner = (await this.getDataSource()).createQueryRunner();
@@ -221,7 +221,7 @@ export class Orbis {
                 await queryRunner.startTransaction();
 
                 // Execute operation
-                const result = await operation();
+                const result = await operation(this.currentManager);
 
                 // Commit transaction
                 await queryRunner.commitTransaction();
