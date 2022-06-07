@@ -1,7 +1,7 @@
 import path from 'path';
 import {readdir} from 'fs/promises';
 import {fileURLToPath} from 'url';
-import {ArgsValue, GetGen} from 'nexus/dist/core';
+import {core as nexus} from 'nexus';
 import {GraphQLResolveInfo} from 'graphql';
 import {getMetadataArgsStorage, BaseEntity} from 'typeorm';
 import * as yup from 'yup';
@@ -87,12 +87,12 @@ export const findMigrations = async (url: string, name = 'migrations') => {
     return migrations;
 };
 
-export type Context = GetGen<'context'>;
+export type Context = nexus.GetGen<'context'>;
 
 export type EntityFieldResolver<Type, Options = Record<string, unknown>> = (
     orbis: Orbis,
     metadata: EntityMetadata,
-    args: ArgsValue<string, string>,
+    args: nexus.ArgsValue<string, string>,
     context: Context,
     info: GraphQLResolveInfo,
     options?: Options

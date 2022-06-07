@@ -1,5 +1,5 @@
 
-import {AllNexusNamedTypeDefs, NexusExtendInputTypeDef, NexusExtendTypeDef, FieldResolver} from 'nexus/dist/core';
+import {core as nexus} from 'nexus';
 import {ColumnMetadataArgs} from 'typeorm/metadata-args/ColumnMetadataArgs';
 import {RelationMetadataArgs} from 'typeorm/metadata-args/RelationMetadataArgs';
 import {ObjectSchema} from 'yup';
@@ -8,7 +8,7 @@ import {WhereArgument} from './arguments';
 import {Constructor, Enum, SchemaFunction} from './util';
 
 /* Type definitions */
-export type TypeDef = AllNexusNamedTypeDefs | NexusExtendInputTypeDef<string> | NexusExtendTypeDef<string>;
+export type TypeDef = nexus.AllNexusNamedTypeDefs | nexus.NexusExtendInputTypeDef<string> | nexus.NexusExtendTypeDef<string>;
 
 export interface TypeDefs {
     [typeName: string]: TypeDef;
@@ -80,7 +80,7 @@ export interface FieldMetadata {
     nullable?: boolean;
     float?: boolean;
     graphql?: boolean;
-    resolve?: FieldResolver<string, string>;
+    resolve?: nexus.FieldResolver<string, string>;
 
     column?: ColumnMetadataArgs;
     relation?: RelationMetadataArgs;

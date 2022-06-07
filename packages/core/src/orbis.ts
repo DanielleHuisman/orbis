@@ -15,7 +15,7 @@ import {registerUnionType, OrbisUnionOptions} from './unions';
 import {Constructor, OperationOptions} from './util';
 
 export interface OrbisOptions {
-    dataSource?: DataSource;
+    dataSource?: DataSource | (() => DataSource);
 
     entity?: GlobalEntityMetadata;
 }
@@ -55,6 +55,9 @@ export class Orbis {
     getDataSource() {
         if (!this.options.dataSource) {
             throw new Error('No TypeORM DataSource provided in options.');
+        }
+        if (typeof this.options.dataSource === 'function') {
+            this.options.dataSource = this.options.dataSource();
         }
         return this.options.dataSource;
     }

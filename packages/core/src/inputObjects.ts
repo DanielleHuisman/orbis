@@ -1,5 +1,4 @@
-import {inputObjectType} from 'nexus';
-import {NexusObjectTypeDef, NexusInputObjectTypeDef, NexusEnumTypeDef, InputDefinitionBlock} from 'nexus/dist/core';
+import {core as nexus, inputObjectType} from 'nexus';
 import {getMetadataArgsStorage} from 'typeorm';
 
 import {getOrbis, Orbis, OrbisBaseOptions} from './orbis';
@@ -28,7 +27,7 @@ export const OrbisInputObject = (options: OrbisBaseOptions = {}): ClassDecorator
     registerInputObjectType(target, options);
 };
 
-export const generateNexusInputObjects = (orbis: Orbis, Type: NexusObjectTypeDef<string>, entity: EntityMetadata) => {
+export const generateNexusInputObjects = (orbis: Orbis, Type: nexus.NexusObjectTypeDef<string>, entity: EntityMetadata) => {
     const inputObjects = [
         inputObjectType({
             name: `${Type.name}WhereUniqueInput`,
@@ -64,7 +63,7 @@ export const generateNexusInputObjects = (orbis: Orbis, Type: NexusObjectTypeDef
 export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string) => {
     const name = `${typeName}WhereInput`;
 
-    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+    return orbis.getMetadata().getOrAddType<nexus.NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
             let currentTarget = target;
@@ -76,7 +75,7 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                         }
 
                         let type = resolveFieldType(field);
-                        const definition: Partial<InputDefinitionBlock<string>> = t.nullable;
+                        const definition: Partial<nexus.InputDefinitionBlock<string>> = t.nullable;
 
                         if (Array.isArray(type)) {
                             type = type[0];
@@ -109,7 +108,7 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                                 type: 'DateTimeFilter'
                             });
                         } else if (typeof type === 'function') {
-                            let whereType: NexusInputObjectTypeDef<string>;
+                            let whereType: nexus.NexusInputObjectTypeDef<string>;
 
                             // TODO: this should probably also happen for one-to-one relations
                             // TODO: add an additional case for list relation (one-to-many and many-to-many) to support e.g. exists, notExists queries
@@ -124,7 +123,7 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                             });
                         } else {
                             const enumDef = Object.entries(orbis.getMetadata().getTypes())
-                                .find((entry) => entry[1] instanceof NexusEnumTypeDef && entry[1].value.members === type);
+                                .find((entry) => entry[1] instanceof nexus.NexusEnumTypeDef && entry[1].value.members === type);
 
                             if (enumDef) {
                                 const enumFilterType = generateNexusEnumFilter(orbis, enumDef[0]);
@@ -154,7 +153,7 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
 export const generateNexusEnumFilter = (orbis: Orbis, enumTypeName: string) => {
     const name = `${enumTypeName}Filter`;
 
-    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+    return orbis.getMetadata().getOrAddType<nexus.NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
             t.nullable.field('equals', {
@@ -176,7 +175,7 @@ export const generateNexusEnumFilter = (orbis: Orbis, enumTypeName: string) => {
 export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string) => {
     const name = `${typeName}OrderByInput`;
 
-    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+    return orbis.getMetadata().getOrAddType<nexus.NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
             let currentTarget = target;
@@ -188,7 +187,7 @@ export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructo
                         }
 
                         const type = resolveFieldType(field);
-                        const definition: Partial<InputDefinitionBlock<string>> = t.nullable;
+                        const definition: Partial<nexus.InputDefinitionBlock<string>> = t.nullable;
 
                         if (Array.isArray(type)) {
                             // TODO: handle array ordering
@@ -222,7 +221,7 @@ export const generateNexusOrderByInputObject = (orbis: Orbis, target: Constructo
 export const generateNexusMutationInputObject = (orbis: Orbis, target: Constructor<unknown>, typeName: string, isUpdate: boolean = false) => {
     const name = isUpdate ? `${typeName}UpdateInput` : `${typeName}CreateInput`;
 
-    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+    return orbis.getMetadata().getOrAddType<nexus.NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
             let currentTarget = target;
@@ -234,7 +233,7 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
                         }
 
                         let type = resolveFieldType(field);
-                        let definition: Partial<InputDefinitionBlock<string>> = t;
+                        let definition: Partial<nexus.InputDefinitionBlock<string>> = t;
                         let isNullable = isUpdate || !!field.nullable;
 
                         if (!isUpdate) {
@@ -315,11 +314,11 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
                             }
                         } else {
                             const enumDef = Object.values(orbis.getMetadata().getTypes())
-                                .find((typeDef) => typeDef instanceof NexusEnumTypeDef && typeDef.value.members === type);
+                                .find((typeDef) => typeDef instanceof nexus.NexusEnumTypeDef && typeDef.value.members === type);
 
                             if (enumDef) {
                                 definition.field(fieldName, {
-                                    type: enumDef as NexusEnumTypeDef<string>
+                                    type: enumDef as nexus.NexusEnumTypeDef<string>
                                 });
                             } else {
                                 throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
@@ -339,7 +338,7 @@ export const generateNexusRelationWhereInputObject = (orbis: Orbis, target: Cons
 
     const whereType = generateNexusWhereInputObject(orbis, target, typeName);
 
-    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+    return orbis.getMetadata().getOrAddType<nexus.NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
             t.nullable.boolean('isNull');
@@ -354,7 +353,7 @@ export const generateNexusRelationWhereInputObject = (orbis: Orbis, target: Cons
 export const generateNexusRelationInputObject = (orbis: Orbis, typeName: string, isUpdate: boolean = false) => {
     const name = isUpdate ? `${typeName}UpdateRelationInput` : `${typeName}CreateRelationInput`;
 
-    return orbis.getMetadata().getOrAddType<NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
+    return orbis.getMetadata().getOrAddType<nexus.NexusInputObjectTypeDef<string>>(name, () => inputObjectType({
         name,
         definition(t) {
             t.nullable.field('create', {

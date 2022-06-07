@@ -1,9 +1,8 @@
-import {scalarType} from 'nexus';
-import {ScalarBase} from 'nexus/dist/core';
+import {core as nexus, scalarType} from 'nexus';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 
-export interface OrbisScalarOptions extends OrbisBaseOptions, ScalarBase {
+export interface OrbisScalarOptions extends OrbisBaseOptions, nexus.ScalarBase {
     name: string;
 }
 

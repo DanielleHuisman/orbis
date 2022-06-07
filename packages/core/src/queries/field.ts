@@ -1,5 +1,4 @@
-import {intArg, nullable} from 'nexus';
-import {CommonFieldConfig, OutputDefinitionBlock} from 'nexus/dist/core';
+import {core as nexus, intArg, nullable} from 'nexus';
 
 import {Orbis} from '../orbis';
 import {WhereArgument} from '../arguments';
@@ -10,11 +9,11 @@ import {resolveList} from './list';
 
 export const generateNexusRelationListField = (
     orbis: Orbis,
-    t: OutputDefinitionBlock<string>,
+    t: nexus.OutputDefinitionBlock<string>,
     typeName: string,
     fieldName: string,
     fieldTypeName: string,
-    overrideConfig?: CommonFieldConfig
+    overrideConfig?: nexus.CommonFieldConfig
 ) => {
     t.nonNull.field(fieldName, {
         type: `${fieldTypeName}List`,

@@ -1,5 +1,4 @@
-import {extendType, arg, intArg, nonNull} from 'nexus';
-import {NexusObjectTypeDef, nullable} from 'nexus/dist/core';
+import {core as nexus, extendType, arg, intArg, nonNull, nullable} from 'nexus';
 
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
@@ -16,7 +15,7 @@ export * from './updateOne';
 export * from './deleteOne';
 export * from './deleteMany';
 
-export const generateNexusMutations = (orbis: Orbis, Type: NexusObjectTypeDef<string>, metadata: EntityMetadata) => {
+export const generateNexusMutations = (orbis: Orbis, Type: nexus.NexusObjectTypeDef<string>, metadata: EntityMetadata) => {
     // Generate create one field
     if (shouldGenerateField(orbis, Type.name, 'mutation', 'createOne')) {
         orbis.getMetadata().addTypeByName(`Mutation${Type.name}CreateOne`, extendType({

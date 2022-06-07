@@ -1,5 +1,4 @@
-import {plugin} from 'nexus';
-import {NexusObjectTypeDef} from 'nexus/dist/core';
+import {core as nexus, plugin} from 'nexus';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
 import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata} from './metadata';
@@ -35,7 +34,7 @@ export const orbisPlugin = (options: OrbisPluginOptions = {}) => {
 
     // Generate input objects, queries and mutations
     for (const [entityName, entity] of Object.entries(orbis.getMetadata().getEntities())) {
-        const type = orbis.getMetadata().getType<NexusObjectTypeDef<string>>(entityName);
+        const type = orbis.getMetadata().getType<nexus.NexusObjectTypeDef<string>>(entityName);
 
         generateNexusInputObjects(orbis, type, entity);
         generateNexusQueries(orbis, type, entity);

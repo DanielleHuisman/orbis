@@ -1,4 +1,4 @@
-import {NexusInputObjectTypeConfig} from 'nexus/dist/definitions/inputObjectType';
+import {blocks} from 'nexus';
 
 import {BaseUser, Provider} from '../entities';
 
@@ -42,7 +42,7 @@ export interface ProviderLocalOptions<Data> extends ProviderOptions<Data> {
     onPasswordUpdated?: (provider: Provider) => Promise<void>;
     onRegistered?: (user: BaseUser, provider: Provider) => Promise<void>;
 
-    extendRegisterInput?: NexusInputObjectTypeConfig<string>['definition'];
+    extendRegisterInput?: (t: blocks.InputDefinitionBlock<string>) => void;
 }
 
 export class ProviderLocal<Data = unknown> extends ProviderType<ProviderLocalOptions<Data>> {
