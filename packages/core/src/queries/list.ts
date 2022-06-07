@@ -25,7 +25,7 @@ export const resolveList = async <Entity>(
 ): Promise<EntityList<Entity>> => {
     // Create query builder
     const varName = firstLower(metadata.Entity.name);
-    const qb = orbis.getManager().getRepository(metadata.Entity).createQueryBuilder(varName);
+    const qb = (await orbis.getManager()).getRepository(metadata.Entity).createQueryBuilder(varName);
 
     // Parse arguments
     if (args.where) {

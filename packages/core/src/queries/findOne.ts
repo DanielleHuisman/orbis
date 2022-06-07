@@ -20,7 +20,7 @@ export const findOne = async <Entity>(
 ): Promise<Entity> => {
     // Create query builder
     const varName = metadata.singularName;
-    const qb = orbis.getManager().getRepository(metadata.Entity).createQueryBuilder(varName);
+    const qb = (await orbis.getManager()).getRepository(metadata.Entity).createQueryBuilder(varName);
 
     // Parse arguments
     if (args.relations) {

@@ -24,7 +24,7 @@ export const deleteMany = async <Entity>(
     });
 
     // Find entity repository
-    const repository = orbis.getManager().getRepository(metadata.Entity);
+    const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
     // Delete entities
     if (list.values.length > 0) {

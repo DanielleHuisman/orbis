@@ -41,7 +41,7 @@ export const generateNexusRelationListField = (
             }
 
             // Find entity and relation metadata
-            const entityMetadata = orbis.getDataSource().entityMetadatas.find((e) => e.name === typeName);
+            const entityMetadata = (await orbis.getDataSource()).entityMetadatas.find((e) => e.name === typeName);
             const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
 
             // Generate where argument for the relation
