@@ -18,6 +18,7 @@
         "packages/*"
     ],
     "scripts": {
+        "postinstall": "sed -i 's|dist/index.d.ts|dist-esm/index.d.ts|' node_modules/nexus/package.json",
         "lint": "lerna run lint",
         "lint:ci": "eslint packages/**/src/**/*.ts",
         "test": "lerna run test --no-bail --stream",
@@ -25,20 +26,20 @@
         "build": "yarn run --cwd=packages/core build:ts && lerna run --parallel build:ts"
     },
     "devDependencies": {
-        "@types/jest": "27.5.1",
-        "@types/node": "17.0.23",
-        "@typescript-eslint/eslint-plugin": "5.25.0",
-        "@typescript-eslint/parser": "5.25.0",
-        "eslint": "8.16.0",
-        "eslint-config-google": "0.14.0",
-        "eslint-plugin-jest": "26.2.2",
-        "jest": "28.1.0",
-        "jest-extended": "2.0.0",
-        "lerna": "4.0.0",
-        "lerna-changelog": "2.2.0",
-        "rimraf": "3.0.2",
-        "ts-jest": "28.0.2",
-        "typescript": "4.6.4"
+        "@types/jest": "^28.1.1",
+        "@types/node": "^17.0.40",
+        "@typescript-eslint/eslint-plugin": "^5.27.1",
+        "@typescript-eslint/parser": "^5.27.1",
+        "eslint": "^8.17.0",
+        "eslint-config-google": "^0.14.0",
+        "eslint-plugin-jest": "^26.5.3",
+        "jest": "^28.1.0",
+        "jest-extended": "^2.0.0",
+        "lerna": "^5.0.0",
+        "lerna-changelog": "^2.2.0",
+        "rimraf": "^3.0.2",
+        "ts-jest": "^28.0.4",
+        "typescript": "^4.7.3"
     },
     "dependencies": {}
 }

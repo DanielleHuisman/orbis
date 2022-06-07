@@ -1,12 +1,4 @@
-import {
-    InputDefinitionBlock,
-    OutputDefinitionBlock,
-    NexusOutputFieldConfig,
-    NexusEnumTypeDef,
-    FieldResolver,
-    AllNexusNamedInputTypeDefs,
-    AllNexusNamedOutputTypeDefs
-} from 'nexus/dist/core';
+import {core as nexus} from 'nexus';
 import {getMetadataArgsStorage} from 'typeorm';
 
 import {getOrbis, Orbis, OrbisBaseOptions} from './orbis';
@@ -19,7 +11,7 @@ export interface OrbisFieldOptions extends OrbisBaseOptions {
     nullable?: boolean;
     float?: boolean;
     graphql?: boolean;
-    resolve?: FieldResolver<string, string>;
+    resolve?: nexus.FieldResolver<string, string>;
 }
 
 export type OrbisFieldArguments = [] | [TypeFunction | OrbisFieldOptions] | [TypeFunction, OrbisFieldOptions];
@@ -113,7 +105,7 @@ const mergeFields = (orbis: Orbis, target: Constructor<unknown>) => {
 export const generateNexusInputFields = (
     orbis: Orbis,
     target: Constructor<unknown>,
-    t: InputDefinitionBlock<string>
+    t: nexus.InputDefinitionBlock<string>
 ) => {
     mergeFields(orbis, target);
 
@@ -128,7 +120,7 @@ export const generateNexusInputFields = (
 export const generateNexusOutputFields = (
     orbis: Orbis,
     target: Constructor<unknown>,
-    t: OutputDefinitionBlock<string>
+    t: nexus.OutputDefinitionBlock<string>
 ) => {
     mergeFields(orbis, target);
 
@@ -143,7 +135,7 @@ export const generateNexusOutputFields = (
 export const generateNexusInputField = (
     orbis: Orbis,
     typeName: string,
-    t: InputDefinitionBlock<string>,
+    t: nexus.InputDefinitionBlock<string>,
     fieldName: string,
     field: FieldMetadata,
     forceNullable: boolean = false
@@ -155,7 +147,7 @@ export const generateNexusInputField = (
         return;
     }
 
-    let definition: Partial<InputDefinitionBlock<string>> = t;
+    let definition: Partial<nexus.InputDefinitionBlock<string>> = t;
 
     if (field.nullable || forceNullable) {
         definition = definition.nullable;
@@ -202,10 +194,12 @@ export const generateNexusInputField = (
         }
     } else if (typeof type === 'function') {
         definition.field(fieldName, {
-            type: orbis.getMetadata().getType<AllNexusNamedInputTypeDefs>(type.name) || type.name
+            type: orbis.getMetadata().getType<nexus.AllNexusNamedInputTypeDefs>(type.name) || type.name
         });
     } else {
-        const enumDef = Object.entries(orbis.getMetadata().getTypes()).find((entry) => entry[1] instanceof NexusEnumTypeDef && entry[1].value.members === type);
+        const enumDef = Object.entries(orbis.getMetadata().getTypes()).find(
+            (entry) => entry[1] instanceof nexus.NexusEnumTypeDef && entry[1].value.members === type
+        );
         if (enumDef) {
             definition.field(fieldName, {
                 type: enumDef[0]
@@ -219,19 +213,19 @@ export const generateNexusInputField = (
 export const generateNexusOutputField = (
     orbis: Orbis,
     typeName: string,
-    t: OutputDefinitionBlock<string>,
+    t: nexus.OutputDefinitionBlock<string>,
     fieldName: string,
     field: FieldMetadata
 ) => {
     let type = resolveFieldType(field);
 
-    const config: Partial<NexusOutputFieldConfig<string, string>> = {};
+    const config: Partial<nexus.NexusOutputFieldConfig<string, string>> = {};
 
     if (field.resolve) {
         config.resolve = field.resolve;
     }
 
-    let definition: Partial<OutputDefinitionBlock<string>> = t;
+    let definition: Partial<nexus.OutputDefinitionBlock<string>> = t;
 
     if (field.nullable) {
         definition = definition.nullable;
@@ -288,11 +282,13 @@ export const generateNexusOutputField = (
         }
     } else if (typeof type === 'function') {
         definition.field(fieldName, {
-            type: orbis.getMetadata().getType<AllNexusNamedOutputTypeDefs>(type.name) || type.name,
+            type: orbis.getMetadata().getType<nexus.AllNexusNamedOutputTypeDefs>(type.name) || type.name,
             ...config
         });
     } else {
-        const enumDef = Object.entries(orbis.getMetadata().getTypes()).find((entry) => entry[1] instanceof NexusEnumTypeDef && entry[1].value.members === type);
+        const enumDef = Object.entries(orbis.getMetadata().getTypes()).find(
+            (entry) => entry[1] instanceof nexus.NexusEnumTypeDef && entry[1].value.members === type
+        );
         if (enumDef) {
             definition.field(fieldName, {
                 type: enumDef[0],

@@ -1,5 +1,4 @@
-import {interfaceType} from 'nexus';
-import {AbstractTypeResolver} from 'nexus/dist/core';
+import {core as nexus, interfaceType} from 'nexus';
 import {BaseEntity} from 'typeorm';
 import pluralize from 'pluralize';
 
@@ -11,7 +10,7 @@ import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
 export interface OrbisInterfaceOptions<InterfaceType> extends OrbisBaseOptions {
     schema?: SchemaFunction<Omit<InterfaceType, keyof BaseEntity>>;
-    resolveType?: AbstractTypeResolver<string>;
+    resolveType?: nexus.AbstractTypeResolver<string>;
     query?: EntityQueryMetadata;
     mutation?: EntityMutationMetadata;
     create?: EntityCreateMetadata<Omit<InterfaceType, keyof BaseEntity>>;

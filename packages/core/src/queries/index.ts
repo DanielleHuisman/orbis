@@ -1,5 +1,4 @@
-import {arg, intArg, extendType, nonNull, nullable} from 'nexus';
-import {NexusObjectTypeDef, objectType} from 'nexus/dist/core';
+import {core as nexus, arg, intArg, extendType, objectType, nonNull, nullable} from 'nexus';
 
 import {Orbis} from '../orbis';
 import {EntityMetadata} from '../metadata';
@@ -16,7 +15,7 @@ export * from './findMany';
 export * from './info';
 export * from './list';
 
-export const generateNexusQueries = (orbis: Orbis, Type: NexusObjectTypeDef<string>, metadata: EntityMetadata) => {
+export const generateNexusQueries = (orbis: Orbis, Type: nexus.NexusObjectTypeDef<string>, metadata: EntityMetadata) => {
     // Generate list type
     const ListType = objectType({
         name: `${Type.name}List`,
