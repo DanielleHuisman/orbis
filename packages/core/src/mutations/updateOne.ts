@@ -20,7 +20,7 @@ export const updateEntity = async <Entity>(
     options: OperationOptions = {}
 ): Promise<void> => {
     // Find entity repository
-    const repository = orbis.getManager().getRepository(metadata.Entity);
+    const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
     // Create update query builder
     const qb = repository

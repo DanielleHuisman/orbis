@@ -15,7 +15,7 @@ import {registerUnionType, OrbisUnionOptions} from './unions';
 import {Constructor, OperationOptions} from './util';
 
 export interface OrbisOptions {
-    dataSource?: DataSource | (() => DataSource);
+    dataSource?: DataSource | (() => Promise<DataSource>);
 
     entity?: GlobalEntityMetadata;
 }
@@ -52,18 +52,18 @@ export class Orbis {
         };
     }
 
-    getDataSource() {
+    async getDataSource() {
         if (!this.options.dataSource) {
             throw new Error('No TypeORM DataSource provided in options.');
         }
         if (typeof this.options.dataSource === 'function') {
-            this.options.dataSource = this.options.dataSource();
+            this.options.dataSource = await this.options.dataSource();
         }
         return this.options.dataSource;
     }
 
-    getManager() {
-        return this.currentManager || this.getDataSource().manager;
+    async getManager() {
+        return this.currentManager || (await this.getDataSource()).manager;
     }
 
     getMetadata() {
@@ -210,7 +210,7 @@ export class Orbis {
             return await operation();
         } else {
             // Create query runner
-            const queryRunner = this.getDataSource().createQueryRunner();
+            const queryRunner = (await this.getDataSource()).createQueryRunner();
 
             // Change entity manager
             const oldManager = this.currentManager;

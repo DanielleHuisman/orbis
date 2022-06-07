@@ -39,10 +39,10 @@ export const createEntity = async (
     options: OperationOptions = {}
 ): Promise<UniqueWhereArgument> => {
     // Find entity repository
-    const repository = orbis.getManager().getRepository(metadata.Entity);
+    const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
     // Find entity metadata
-    const entityMetadata = orbis.getDataSource().entityMetadatas.find((e) => e.name === metadata.Entity.name);
+    const entityMetadata = (await orbis.getDataSource()).entityMetadatas.find((e) => e.name === metadata.Entity.name);
 
     // Create insert query builder
     const qb = repository

@@ -41,10 +41,10 @@ export const updateRelation = async <Entity>(
     const otherMetadata = orbis.getMetadata().getEntity(relationType.name);
 
     // Find entity repository
-    const repository = orbis.getManager().getRepository(metadata.Entity);
+    const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
     // Find entity and relation metadata
-    const entityMetadata = orbis.getDataSource().entityMetadatas.find((e) => e.name === metadata.Entity.name);
+    const entityMetadata = (await orbis.getDataSource()).entityMetadatas.find((e) => e.name === metadata.Entity.name);
     const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
 
 
