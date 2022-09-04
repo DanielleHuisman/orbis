@@ -113,16 +113,17 @@ export const createEntity = async (
     // Handle one-to-many and many-to-many relationships
     for (const {fieldName, fieldValue, relationMetadata} of toManyRelations) {
         for (const value of fieldValue) {
+            // TODO: this lines were probably never necessary
             // Add the entity's identifier to the relationship data
-            if (value.create) {
-                value.create[relationMetadata.inverseSidePropertyPath] = {
-                    connect: identifier
-                };
-            } else if (value.connect) {
-                value.connect[relationMetadata.inverseSidePropertyPath] = {
-                    connect: identifier
-                };
-            }
+            // if (value.create) {
+            //     value.create[relationMetadata.inverseSidePropertyPath] = {
+            //         connect: identifier
+            //     };
+            // } else if (value.connect) {
+            //     value.connect[relationMetadata.inverseSidePropertyPath] = {
+            //         connect: identifier
+            //     };
+            // }
 
             await updateRelation(orbis, metadata, fieldName, value, false, {
                 context: options.context
