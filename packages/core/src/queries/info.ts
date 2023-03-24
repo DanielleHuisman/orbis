@@ -128,10 +128,10 @@ const parseSelectionSetRelations = (
             }
             case 'FragmentSpread': {
                 const fragment = info.fragments[selection.name.value];
-                
+
                 // Check if the fragment is for this type
                 if (fragment.typeCondition.name.value !== type.name) {
-                    continue
+                    continue;
                 }
 
                 // Find relations in fragment
@@ -143,9 +143,9 @@ const parseSelectionSetRelations = (
             case 'InlineFragment': {
                 // Check if the fragment is for this type
                 if (selection.typeCondition.name.value !== type.name) {
-                    continue
+                    continue;
                 }
-                
+
                 // Find relations in inline fragment
                 relations = relations.concat(
                     parseSelectionSetRelations(orbis, info, type, selection.selectionSet, metadata, prefix).filter((r) => !relations.includes(r))
