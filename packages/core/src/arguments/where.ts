@@ -203,7 +203,7 @@ export const parseWhereArgument = (
                         relationWhere = fieldValueWhere;
                     }
 
-                    if (relationWhere) {                        
+                    if (relationWhere) {
                         // Join the relation
                         mainQb.innerJoin(fieldVarPath, fieldVarName);
 
