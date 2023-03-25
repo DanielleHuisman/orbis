@@ -187,9 +187,6 @@ export const parseWhereArgument = (
                     // Increment variable index
                     varNameIndices[relationVarName]++;
 
-                    // Join the relation
-                    mainQb.innerJoin(fieldVarPath, fieldVarName);
-
                     // TODO: handle other relation types (see inputObjects)
 
                     // Parse where argument of the relation
@@ -207,6 +204,9 @@ export const parseWhereArgument = (
                     }
 
                     if (relationWhere) {
+                        // Join the relation
+                        mainQb.innerJoin(fieldVarPath, fieldVarName);
+
                         parseWhereArgument(orbis, fieldType.name, fieldVarPath, mainQb, qb, relationWhere, varNameIndices, fieldVarName);
                     }
                 }
