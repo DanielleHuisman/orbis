@@ -3,7 +3,7 @@ import {objectType} from 'nexus';
 import {BaseEntity} from 'typeorm';
 
 import {getOrbis, OrbisBaseOptions} from './orbis';
-import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata} from './metadata';
+import {EntityQueryMetadata, EntityMutationMetadata, EntityCreateMetadata, EntityValidateMetadata} from './metadata';
 import {generateNexusOutputFields} from './fields';
 import {isEntity, firstLower, Constructor, SchemaFunction} from './util';
 
@@ -14,6 +14,7 @@ export interface OrbisObjectOptions<ObjectType> extends OrbisBaseOptions {
     mutation?: EntityMutationMetadata;
     create?: EntityCreateMetadata<Omit<ObjectType, keyof BaseEntity>>;
     scope?: (context: any) => any;
+    validate?: EntityValidateMetadata<Omit<ObjectType, keyof BaseEntity>>;
 }
 
 export const registerObjectType = <ObjectType>(target: Constructor<unknown>, options: OrbisObjectOptions<ObjectType> = {}) => {
@@ -87,7 +88,9 @@ export const registerObjectType = <ObjectType>(target: Constructor<unknown>, opt
             query: options.query,
             mutation: options.mutation,
             create: options.create,
-            scope: options.scope
+            scope: options.scope,
+            // TODO: fix type hack
+            validate: options.validate as EntityValidateMetadata<unknown>
         };
         orbis.getMetadata().addEntity(target.name, entity);
     }

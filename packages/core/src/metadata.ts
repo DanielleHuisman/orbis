@@ -49,6 +49,7 @@ export interface EntityMetadata {
     create?: EntityCreateMetadata;
     // TODO: add entity generic types for scope where arguments
     scope?: (context: any) => WhereArgument | WhereArgument[];
+    validate?: EntityValidateMetadata;
 }
 
 export interface EntityQueryMetadata {
@@ -61,6 +62,15 @@ export interface EntityMutationMetadata {
     updateOne?: boolean;
     deleteOne?: boolean;
     deleteMany?: boolean;
+}
+
+export interface EntityValidateMetadata<Entity = unknown> {
+    create?: (values: Partial<Entity>) => Promise<void>;
+    update?: (entity: Entity, values: Partial<Entity>) => Promise<void>;
+    delete?: (entity: Entity) => Promise<void>;
+    // TODO: type of other entity based on entity and field name
+    connect?: (entity: Entity, fieldName: string, otherEntity: any) => Promise<void>;
+    disconnect?: (entity: Entity, fieldName: string, otherEntity: any) => Promise<void>;
 }
 
 export type EntityCreateMetadata<Entity = unknown> = {

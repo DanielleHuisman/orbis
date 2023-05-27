@@ -96,6 +96,11 @@ export const createEntity = async (
         await orbis.getMetadata().getSchema(metadata.Entity.name).validate(values);
     }
 
+    // Validate
+    if (metadata.validate?.create) {
+        await metadata.validate.create(values);
+    }
+
     // Set insert values
     qb.values(values);
 

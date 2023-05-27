@@ -21,6 +21,11 @@ export const deleteOne = async <Entity>(
         notFoundError: true
     });
 
+    // Validate
+    if (metadata.validate?.delete) {
+        await metadata.validate.delete(entity);
+    }
+
     // Find entity repository
     const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
