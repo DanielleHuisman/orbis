@@ -56,6 +56,12 @@ export const updateEntity = async <Entity>(
         await orbis.getMetadata().getSchema(metadata.Entity.name).validate(entity);
     }
 
+    // Validate
+    if (metadata.validate?.update) {
+        // TODO: entity already has values applied, so there is no way to compare new values against old values
+        await metadata.validate.update(entity, values);
+    }
+
     if (Object.keys(values).length > 0) {
         // Execute update query
         qb.set(values);

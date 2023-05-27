@@ -47,7 +47,6 @@ export const updateRelation = async <Entity>(
     const entityMetadata = (await orbis.getDataSource()).entityMetadatas.find((e) => e.name === metadata.Entity.name);
     const relationMetadata = entityMetadata.relations.find((relation) => relation.propertyName === fieldName);
 
-
     // Create query builder
     const qb = repository
         .createQueryBuilder(metadata.singularName)
@@ -64,6 +63,16 @@ export const updateRelation = async <Entity>(
 
         // Connect entity
         if (entity) {
+            // Validate
+            if (metadata.validate?.connect) {
+                // TODO: only an identifier is available, but somehow the other entity has to be found (maybe not possible due to database transaction?)
+                // await metadata.validate.connect(entity, fieldName, identifier);
+            }
+            if (otherMetadata.validate?.connect) {
+                // TODO: lookup inverse field name
+                // await otherMetadata.validate.connect(otherEntity, otherFieldName, entity);
+            }
+
             if (relationMetadata.isManyToOne || relationMetadata.isOneToOne) {
                 await qb.set(identifier);
             } else {
@@ -83,6 +92,15 @@ export const updateRelation = async <Entity>(
 
         // Connect entity
         if (entity) {
+            // Validate
+            if (metadata.validate?.connect) {
+                await metadata.validate.connect(entity, fieldName, otherEntity);
+            }
+            if (otherMetadata.validate?.connect) {
+                // TODO: lookup inverse field name
+                // await otherMetadata.validate.connect(otherEntity, otherFieldName, entity);
+            }
+
             if (relationMetadata.isManyToOne || relationMetadata.isOneToOne) {
                 await qb.set(otherEntity);
             } else {
@@ -103,6 +121,15 @@ export const updateRelation = async <Entity>(
             context: options.context,
             notFoundError: true
         });
+
+        // Validate
+        if (metadata.validate?.disconnect) {
+            await metadata.validate.disconnect(entity, fieldName, otherEntity);
+        }
+        if (otherMetadata.validate?.disconnect) {
+            // TODO: lookup inverse field name
+            // await otherMetadata.validate.disconnect(otherEntity, otherFieldName, entity);
+        }
 
         // Disconnect entity
         if (relationMetadata.isManyToOne || relationMetadata.isOneToOne) {

@@ -23,6 +23,13 @@ export const deleteMany = async <Entity>(
         context: options.context
     });
 
+    // Validate
+    if (metadata.validate?.delete) {
+        for (const entity of list.values) {
+            await metadata.validate.delete(entity);
+        }
+    }
+
     // Find entity repository
     const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
