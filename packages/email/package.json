@@ -1,7 +1,7 @@
 {
     "name": "@orbis-framework/email",
     "description": "Email module for Orbis.",
-    "version": "0.3.10",
+    "version": "0.3.11",
     "license": "MIT",
     "author": "Danielle Huisman <danielle@huisman.me> (https://github.com/DanielleHuisman)",
     "repository": {
@@ -46,6 +46,6 @@
         "nodemailer": "^6.7.5"
     },
     "devDependencies": {
-        "@orbis-framework/core": "^0.3.10"
+        "@orbis-framework/core": "^0.3.11"
     }
 }
