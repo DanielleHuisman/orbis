@@ -15,31 +15,34 @@ export const deleteOne = async <Entity>(
     args: DeleteOneArguments,
     options: OperationOptions = {}
 ): Promise<Entity> => {
-    // Find entity
-    const entity = await findOne<Entity>(orbis, metadata, args, {
-        context: options.context,
-        notFoundError: true
-    });
+    // Run delete in a transaction
+    return await orbis.transaction(async () => {
+        // Find entity
+        const entity = await findOne<Entity>(orbis, metadata, args, {
+            context: options.context,
+            notFoundError: true
+        });
 
-    // Validate
-    if (metadata.validate?.delete) {
-        await metadata.validate.delete(entity);
-    }
+        // Validate
+        if (metadata.validate?.delete) {
+            await metadata.validate.delete(entity);
+        }
 
-    // Find entity repository
-    const repository = (await orbis.getManager()).getRepository(metadata.Entity);
+        // Find entity repository
+        const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
-    // Add data to query runner for subscribers
-    repository.queryRunner.data.orbis = {
-        id: repository.getId(entity)
-    };
+        // Add data to query runner for subscribers
+        repository.queryRunner.data.orbis = {
+            id: repository.getId(entity)
+        };
 
-    // Delete entity
-    await repository
-        .createQueryBuilder(metadata.singularName)
-        .delete()
-        .whereInIds([repository.getId(entity)])
-        .execute();
+        // Delete entity
+        await repository
+            .createQueryBuilder(metadata.singularName)
+            .delete()
+            .whereInIds([repository.getId(entity)])
+            .execute();
 
-    return entity;
+        return entity;
+    }, false);
 };

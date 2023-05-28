@@ -18,29 +18,32 @@ export const deleteMany = async <Entity>(
     args: DeleteManyArguments = {},
     options: OperationOptions = {}
 ): Promise<EntityList<Entity>> => {
-    // Find entities
-    const list = await findMany<Entity>(orbis, metadata, args, {
-        context: options.context
-    });
+    // Run delete in a transaction
+    return await orbis.transaction(async () => {
+        // Find entities
+        const list = await findMany<Entity>(orbis, metadata, args, {
+            context: options.context
+        });
 
-    // Validate
-    if (metadata.validate?.delete) {
-        for (const entity of list.values) {
-            await metadata.validate.delete(entity);
+        // Validate
+        if (metadata.validate?.delete) {
+            for (const entity of list.values) {
+                await metadata.validate.delete(entity);
+            }
         }
-    }
 
-    // Find entity repository
-    const repository = (await orbis.getManager()).getRepository(metadata.Entity);
+        // Find entity repository
+        const repository = (await orbis.getManager()).getRepository(metadata.Entity);
 
-    // Delete entities
-    if (list.values.length > 0) {
-        await repository
-            .createQueryBuilder(metadata.singularName)
-            .delete()
-            .whereInIds(list.values.map((entity) => repository.getId(entity)))
-            .execute();
-    }
+        // Delete entities
+        if (list.values.length > 0) {
+            await repository
+                .createQueryBuilder(metadata.singularName)
+                .delete()
+                .whereInIds(list.values.map((entity) => repository.getId(entity)))
+                .execute();
+        }
 
-    return list;
+        return list;
+    }, false);
 };
