@@ -3,10 +3,10 @@
     "description": "Email module for Orbis.",
     "version": "0.3.10",
     "license": "MIT",
-    "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
+    "author": "Danielle Huisman <danielle@huisman.me> (https://github.com/DanielleHuisman)",
     "repository": {
         "type": "git",
-        "url": "https://github.com/DanielHuisman/orbis.git",
+        "url": "https://github.com/DanielleHuisman/orbis.git",
         "directory": "packages/email"
     },
     "keywords": [

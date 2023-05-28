@@ -3,10 +3,10 @@
     "description": "Orbis is a GraphQL server framework on top of TypeORM and Nexus.",
     "private": true,
     "license": "MIT",
-    "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
+    "author": "Danielle Huisman <danielle@huisman.me> (https://github.com/DanielleHuisman)",
     "repository": {
         "type": "git",
-        "url": "https://github.com/DanielHuisman/orbis.git"
+        "url": "https://github.com/DanielleHuisman/orbis.git"
     },
     "keywords": [
         "orbis",
