@@ -1,7 +1,7 @@
 {
     "name": "@orbis-framework/auth",
     "description": "Authentication module for Orbis.",
-    "version": "0.3.9",
+    "version": "0.3.10",
     "license": "MIT",
     "author": "Daniel Huisman <daniel@huisman.me> (https://danielhuisman.io)",
     "repository": {
@@ -55,8 +55,8 @@
         "randomstring": "^1.2.2"
     },
     "devDependencies": {
-        "@orbis-framework/core": "^0.3.9",
-        "@orbis-framework/email": "^0.3.9",
+        "@orbis-framework/core": "^0.3.10",
+        "@orbis-framework/email": "^0.3.10",
         "typeorm": "0.3.6"
     }
 }
