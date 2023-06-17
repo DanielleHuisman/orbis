@@ -123,10 +123,6 @@ export const createEntity = async (
                 value.create[relationMetadata.inverseSidePropertyPath] = {
                     connect: identifier
                 };
-            } else if (value.connect) {
-                value.connect[relationMetadata.inverseSidePropertyPath] = {
-                    connect: identifier
-                };
             }
 
             await updateRelation(orbis, metadata, fieldName, value, false, {
