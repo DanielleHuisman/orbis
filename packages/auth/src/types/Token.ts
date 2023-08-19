@@ -15,8 +15,10 @@ export const generateToken = async (orbis: Orbis, provider: Provider, type: Toke
     await orbis.deleteMany(Token, {
         where: {
             provider: {
-                id: {
-                    equals: provider.id
+                matches: {
+                    id: {
+                        equals: provider.id
+                    }
                 }
             }
         }
