@@ -214,8 +214,10 @@ export const generateTypes = (orbis: Orbis) => {
                             let provider = await orbis.findFirst(Provider, {
                                 where: {
                                     user: {
-                                        id: {
-                                            equals: context.user.id
+                                        matches: {
+                                            id: {
+                                                equals: context.user.id
+                                            }
                                         }
                                     },
                                     type: {
@@ -295,8 +297,10 @@ export const generateTypes = (orbis: Orbis) => {
                             let provider = await orbis.findFirst(Provider, {
                                 where: {
                                     user: {
-                                        id: {
-                                            equals: context.user.id
+                                        matches: {
+                                            id: {
+                                                equals: context.user.id
+                                            }
                                         }
                                     },
                                     type: {
