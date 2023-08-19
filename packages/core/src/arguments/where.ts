@@ -196,8 +196,10 @@ export const parseWhereArgument = (
                             qb.andWhere(`${varName}.${fieldName} IS NULL`);
                         } else if (fieldValueWhere.notIsNull) {
                             qb.andWhere(`${varName}.${fieldName} IS NOT NULL`);
-                        } else {
+                        } else if (fieldValueWhere.matches) {
                             relationWhere = fieldValueWhere.matches as WhereArgument;
+                        } else {
+                            throw new Error(`Missing where operator, must be one of "isNull", "notIsNull" or "matches".`);
                         }
                     } else {
                         relationWhere = fieldValueWhere;
