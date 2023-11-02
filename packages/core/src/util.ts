@@ -27,7 +27,7 @@ export const fixNullPrototypes = (data: object) => {
         if (typeof value === 'object' && value && value.__proto__ === undefined) {
             Object.setPrototypeOf(value, {});
 
-            fixNullPrototypes(value);
+            fixNullPrototypes(value as object);
         }
     }
 };
@@ -80,7 +80,7 @@ export const findMigrations = async (url: string, name = 'migrations') => {
     const files = await readdir(path.join(directory, name));
 
     for (const file of files) {
-        const module = await import(path.join(directory, name, file));
+        const module = await import(path.join(directory, name, file)) as Record<string, unknown>;
         migrations = migrations.concat(Object.values(module).filter((value) => typeof value === 'function') as Function[]);
     }
 

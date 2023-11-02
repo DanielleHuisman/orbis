@@ -32,7 +32,7 @@ export const generateTypes = (orbis: Orbis) => ({
                     type: nonNull(stringArg()),
                     redirectUri: nonNull(stringArg())
                 },
-                async resolve(_, args: OAuthAuthorizeArgs) {
+                resolve(_, args: OAuthAuthorizeArgs) {
                     // Find provider
                     const providerType = providers.find((p) => p.getName() === args.type);
                     if (!providerType || !(providerType instanceof ProviderTypeOAuth)) {

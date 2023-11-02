@@ -9,7 +9,7 @@
     },
     "targetDefaults": {
         "build": {
-            "dependsOn": [{ "projects": ["@orbis-framework/core"], "target": "build" }, "^build", "lint"],
+            "dependsOn": ["lint", { "projects": ["@orbis-framework/core"], "target": "build" }, "^build"],
             "outputs": ["{projectRoot}/dist"]
         },
         "test": {

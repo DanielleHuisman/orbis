@@ -131,7 +131,7 @@ export const generateNexusWhereInputObject = (orbis: Orbis, target: Constructor<
                                     type: enumFilterType
                                 });
                             } else {
-                                throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
+                                throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum`);
                             }
                         }
                     }
@@ -321,7 +321,7 @@ export const generateNexusMutationInputObject = (orbis: Orbis, target: Construct
                                     type: enumDef as nexus.NexusEnumTypeDef<string>
                                 });
                             } else {
-                                throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
+                                throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum`);
                             }
                         }
                     }
