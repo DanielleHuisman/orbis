@@ -20,9 +20,9 @@
     "scripts": {
         "_postinstall": "sed -i 's|dist/index.d.ts|dist-esm/index.d.ts|' node_modules/nexus/package.json",
         "lint": "lerna run lint --stream",
-        "build": "lerna  run build",
+        "build": "lerna run build",
         "test": "lerna run test --no-bail --stream",
-        "test:ci": "yarn run build && jest --config jest.config.ci.json"
+        "test:ci": "yarn run build --concurrency=1 && jest --config jest.config.ci.json"
     },
     "devDependencies": {
         "@types/jest": "^29.5.7",

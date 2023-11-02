@@ -1,12 +1,6 @@
 {
     "collectCoverage": true,
     "coverageDirectory": "coverage",
-    "globals": {
-        "ts-jest": {
-            "tsconfig": "tsconfig.json",
-            "useESM": true
-        }
-    },
     "preset": "ts-jest",
     "setupFilesAfterEnv": ["jest-extended"],
     "testEnvironment": "node",
