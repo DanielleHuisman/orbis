@@ -22,7 +22,7 @@
         "lint": "lerna run lint --stream",
         "build": "lerna  run build",
         "test": "lerna run test --no-bail --stream",
-        "test:ci": "yarn run build && jest --config jest.config.ci.json"
+        "test:ci": "yarn run build --concurrency=1 && jest --config jest.config.ci.json"
     },
     "devDependencies": {
         "@types/jest": "^29.5.7",
