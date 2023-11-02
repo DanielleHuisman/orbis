@@ -32,7 +32,7 @@
         "lint": "eslint src/**/*.ts",
         "test": "jest --config ../../jest.config.json --roots packages/core",
         "clean": "rimraf dist",
-        "build": "yarn run clean && yarn run lint && yarn run build:ts",
+        "build": "yarn run clean && yarn run build:ts",
         "build:ts": "tsc",
         "prepublishOnly": "yarn run build",
         "dev": "tsc --watch"

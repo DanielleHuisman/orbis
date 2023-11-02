@@ -1,0 +1,19 @@
+{
+    "tasksRunnerOptions": {
+        "default": {
+            "runner": "nx/tasks-runners/default",
+            "options": {
+                "cacheableOperations": ["lint", "build"]
+            }
+        }
+    },
+    "targetDefaults": {
+        "build": {
+            "dependsOn": [{ "projects": ["@orbis-framework/core"], "target": "build" }, "^build", "lint"],
+            "outputs": ["{projectRoot}/dist"]
+        },
+        "test": {
+            "dependsOn": ["build"]
+        }
+    }
+}
