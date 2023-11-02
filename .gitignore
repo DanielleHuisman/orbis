@@ -1,7 +1,6 @@
 node_modules/
 dist/
 .cache/
-.changelog/
 coverage/
 
 logs/
@@ -12,3 +11,11 @@ logs/
 
 Thumbs.db
 .DS_Store
+
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
