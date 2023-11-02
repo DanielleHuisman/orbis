@@ -23,6 +23,8 @@ jobs:
       - run: yarn
       - run: yarn run lint
       - run: yarn run test:ci
+        env:
+          NODE_OPTIONS: '--max-old-space-size=6144'
       - uses: codecov/codecov-action@v3
         with:
           directory: coverage
