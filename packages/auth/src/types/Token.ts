@@ -26,7 +26,7 @@ export const generateToken = async (orbis: Orbis, provider: Provider, type: Toke
 
     // Generate token
     // TODO: improve handling of unique token violation
-    let token = null;
+    let token: Token = null;
     while (!token) {
         const generatedToken = randomstring.generate(32);
 

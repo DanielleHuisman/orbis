@@ -15,7 +15,6 @@ export interface ProviderOptions<Data> {
     createUser: (args: CreateUserArgs<Data>) => Promise<BaseUser>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export abstract class ProviderType<Options extends ProviderOptions<any> = ProviderOptions<any>> {
 
     private name: string;

@@ -2,7 +2,7 @@ import {core as nexus} from 'nexus';
 import {getMetadataArgsStorage} from 'typeorm';
 
 import {getOrbis, Orbis, OrbisBaseOptions} from './orbis';
-import {FieldMetadata, TypeFunction} from './metadata';
+import {FieldMetadata, Type, TypeFunction} from './metadata';
 import {generateNexusRelationListField} from './queries';
 import {Constructor} from './util';
 
@@ -54,7 +54,7 @@ export const OrbisField = (...args: OrbisFieldArguments): PropertyDecorator => (
     }
 
     // Parse arguments
-    let type = null;
+    let type: TypeFunction = null;
     let options = {};
     if (args.length === 1) {
         if (typeof args[0] === 'function') {
@@ -74,7 +74,7 @@ export const OrbisField = (...args: OrbisFieldArguments): PropertyDecorator => (
 
     // Use field type from metadata if none is provided
     if (fieldType && fieldType !== Object && !type) {
-        type = () => fieldType;
+        type = () => fieldType as Type;
     }
 
     registerField(target, propertyName, {
@@ -205,7 +205,7 @@ export const generateNexusInputField = (
                 type: enumDef[0]
             });
         } else {
-            throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
+            throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum`);
         }
     }
 };
@@ -295,7 +295,7 @@ export const generateNexusOutputField = (
                 ...config
             });
         } else {
-            throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum "${type}"`);
+            throw new Error(`Type of field "${fieldName}" on "${typeName}" can't be an unknown enum`);
         }
     }
 };

@@ -6,6 +6,7 @@ import {ObjectSchema} from 'yup';
 
 import {WhereArgument} from './arguments';
 import {Constructor, Enum, SchemaFunction} from './util';
+import {BaseEntity} from 'typeorm';
 
 /* Type definitions */
 export type TypeDef = nexus.AllNexusNamedTypeDefs | nexus.NexusExtendInputTypeDef<string> | nexus.NexusExtendTypeDef<string>;
@@ -19,8 +20,8 @@ export interface Interfaces {
     [name: string]: InterfaceMetadata<unknown>;
 }
 
-export interface InterfaceMetadata<ObjectType> {
-    schema?: SchemaFunction<ObjectType>;
+export interface InterfaceMetadata<InterfaceType> {
+    schema?: SchemaFunction<Omit<InterfaceType, keyof BaseEntity>>;
 }
 
 /* Objects */
@@ -30,7 +31,7 @@ export interface Objects {
 
 export interface ObjectMetadata<ObjectType> {
     implements: Constructor<unknown>[];
-    schema?: SchemaFunction<ObjectType>;
+    schema?: SchemaFunction<Omit<ObjectType, keyof BaseEntity>>;
 }
 
 /* Entities */
@@ -158,11 +159,11 @@ export class OrbisMetadata {
         return this.interfaces[typeName];
     }
 
-    addInterface(typeName: string, metadata: InterfaceMetadata<any>) {
+    addInterface<InterfaceType>(typeName: string, metadata: InterfaceMetadata<InterfaceType>) {
         if (this.interfaces[typeName]) {
             throw new Error(`Interface type "${typeName}" is already registered`);
         }
-        this.interfaces[typeName] = metadata;
+        this.interfaces[typeName] = metadata as InterfaceMetadata<any>;
     }
 
     hasObject(typeName: string) {
@@ -177,11 +178,11 @@ export class OrbisMetadata {
         return this.objects[typeName];
     }
 
-    addObject(typeName: string, metadata: ObjectMetadata<any>) {
+    addObject<ObjectType>(typeName: string, metadata: ObjectMetadata<ObjectType>) {
         if (this.objects[typeName]) {
             throw new Error(`Object type "${typeName}" is already registered`);
         }
-        this.objects[typeName] = metadata;
+        this.objects[typeName] = metadata as ObjectMetadata<any>;
     }
 
     hasEntity(typeName: string) {

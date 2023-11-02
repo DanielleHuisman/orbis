@@ -53,7 +53,7 @@ export class ProviderGoogle extends ProviderTypeOAuth<ProviderGoogleOptions> {
         return {
             provider: {
                 identifier: user.data.id,
-                credentials: tokens.refresh_token as string,
+                credentials: tokens.refresh_token,
                 email: user.data.email
             },
             data: user.data

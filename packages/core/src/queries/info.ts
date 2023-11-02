@@ -31,7 +31,7 @@ export const parseOrderByInfo = (orderBy: OrderByArgumentAsObject, info: GraphQL
 
 
 const parseOrderByInfoNode = (orderBy: OrderByArgumentAsObject, info: ObjectValueNode, type: GraphQLInputObjectType, prefix: string[] = []) => {
-    let result = [];
+    let result: (string | OrderByArgumentAsObject)[][] = [];
 
     for (const field of info.fields) {
         const fieldName = field.name.value;
@@ -66,7 +66,7 @@ const parseSelectionSetRelations = (
     metadata: EntityMetadata,
     prefix: string
 ) => {
-    let relations = [];
+    let relations: string[] = [];
 
     // Remove non-null and list modifiers from the type
     while (type instanceof GraphQLNonNull || type instanceof GraphQLList) {
