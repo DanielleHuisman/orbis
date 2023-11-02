@@ -1,7 +1,7 @@
 import {Orbis} from '@orbis-framework/core';
 import {OrbisEmail, Email} from '@orbis-framework/email';
 
-export const sendEmail = <T>(orbis: Orbis, email: Email<T>) => {
+export const sendEmail = <T extends Record<string, unknown>>(orbis: Orbis, email: Email<T>) => {
     // Find Orbis Email module for email integration
     const orbisEmail = orbis.getModule<OrbisEmail>('email');
 
