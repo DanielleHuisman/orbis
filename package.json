@@ -18,7 +18,6 @@
         "packages/*"
     ],
     "scripts": {
-        "_postinstall": "sed -i 's|dist/index.d.ts|dist-esm/index.d.ts|' node_modules/nexus/package.json",
         "lint": "lerna run lint --stream",
         "build": "lerna run build",
         "test": "lerna run test --no-bail --stream",
