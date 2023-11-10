@@ -237,7 +237,7 @@ export const generateNexusOutputField = (
         type = type[0];
 
         if (field.relation) {
-            generateNexusRelationListField(orbis, t, typeName, fieldName, type.name, config);
+            generateNexusRelationListField(orbis, t, typeName, fieldName, (type as Constructor<unknown>).name, config);
             return;
         }
 
