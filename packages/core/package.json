@@ -1,7 +1,7 @@
 {
     "name": "@orbis-framework/core",
     "description": "Core module for Orbis.",
-    "version": "0.3.16",
+    "version": "0.3.17",
     "license": "MIT",
     "author": "Danielle Huisman <danielle@huisman.me> (https://github.com/DanielleHuisman)",
     "repository": {
