@@ -97,7 +97,7 @@ export interface FieldMetadata {
     relation?: RelationMetadataArgs;
 }
 
-export type Type = Constructor<unknown> | Constructor<unknown>[] | Enum;
+export type Type = Constructor<unknown> | Constructor<unknown>[] | Enum | Enum[];
 export type TypeFunction = () => Type;
 
 /* Schemas */
