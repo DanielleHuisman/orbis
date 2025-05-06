@@ -1785,8 +1785,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@orbis-framework/auth@workspace:packages/auth"
   dependencies:
-    "@orbis-framework/core": "npm:^0.3.17"
-    "@orbis-framework/email": "npm:^0.3.17"
+    "@orbis-framework/core": "npm:^0.3.18"
+    "@orbis-framework/email": "npm:^0.3.18"
     "@types/bcrypt": "npm:^5.0.1"
     "@types/jsonwebtoken": "npm:^9.0.4"
     "@types/randomstring": "npm:^1.1.10"
@@ -1804,7 +1804,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@orbis-framework/core@npm:^0.3.17, @orbis-framework/core@workspace:packages/core":
+"@orbis-framework/core@npm:^0.3.18, @orbis-framework/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@orbis-framework/core@workspace:packages/core"
   dependencies:
@@ -1821,11 +1821,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@orbis-framework/email@npm:^0.3.17, @orbis-framework/email@workspace:packages/email":
+"@orbis-framework/email@npm:^0.3.18, @orbis-framework/email@workspace:packages/email":
   version: 0.0.0-use.local
   resolution: "@orbis-framework/email@workspace:packages/email"
   dependencies:
-    "@orbis-framework/core": "npm:^0.3.17"
+    "@orbis-framework/core": "npm:^0.3.18"
     "@types/email-templates": "npm:^10.0.3"
     email-templates: "npm:^11.1.1"
     nodemailer: "npm:^6.9.7"
