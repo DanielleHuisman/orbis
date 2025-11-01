@@ -41,7 +41,7 @@
     "peerDependencies": {
         "@orbis-framework/core": ">=0.0.1",
         "@orbis-framework/email": ">=0.0.1",
-        "typeorm": ">=0.3.4"
+        "typeorm": ">=0.3.26"
     },
     "dependencies": {
         "@types/bcrypt": "^5.0.1",
