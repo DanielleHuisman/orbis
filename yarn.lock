@@ -8018,16 +8018,16 @@ __metadata:
   linkType: hard
 
 "nodemailer@npm:^6.9.2, nodemailer@npm:^6.9.3":
-  version: 6.9.9
-  resolution: "nodemailer@npm:6.9.9"
-  checksum: ba72da4ca8a003921c86f3d132d64d9bb86c1a3d79d248664b3de28f6a7a621f0476273ad7cf3ecc48d3b78a66ae4ec62b7c4c8ab6f07d9ca26d4bad4d08802e
+  version: 6.10.1
+  resolution: "nodemailer@npm:6.10.1"
+  checksum: e81fde258ea4f4e5646e9e3eebe89294d007939999d2d1a8c96c5488fa00bf659e46cf76fccb2697e9aa6ef9807a1ed47ff2aef6ad30b795e3849b6997066d16
   languageName: node
   linkType: hard
 
 "nodemailer@npm:^7.0.7":
-  version: 7.0.9
-  resolution: "nodemailer@npm:7.0.9"
-  checksum: 029af0c89d64a521aa9969196e44c13ef289c7f419264eed8d63682610999e06205b0fc264ab8ac65941dc3eefd3c435f23337a32880614cc199744c9be6209a
+  version: 7.0.11
+  resolution: "nodemailer@npm:7.0.11"
+  checksum: 208f108fdb4c5dd0e3a2f013578d53dad505cf1b9c7a084f6d22fc9d6f3912daafb4a23793ca568ff848afc35f15f4eb24382d3f6f9fb8ede4a8410d4ca63618
   languageName: node
   linkType: hard
 
