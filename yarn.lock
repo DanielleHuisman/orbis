@@ -1821,7 +1821,7 @@ __metadata:
     "@orbis-framework/core": "npm:^0.3.18"
     "@types/email-templates": "npm:^10.0.3"
     email-templates: "npm:^11.1.1"
-    nodemailer: "npm:^7.0.7"
+    nodemailer: "npm:^8.0.4"
   peerDependencies:
     "@orbis-framework/core": ">=0.0.1"
   languageName: unknown
@@ -8064,10 +8064,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^7.0.7":
-  version: 7.0.12
-  resolution: "nodemailer@npm:7.0.12"
-  checksum: b03948744423386b5fd7cb5bdf60797f2f71c4d3db202eedf7e0037429b5887cb90b641e7ca244af3b96e0b76949e3135cba96336fb0d3ade00ae33727ca8cf8
+"nodemailer@npm:^8.0.4":
+  version: 8.0.4
+  resolution: "nodemailer@npm:8.0.4"
+  checksum: 5fb6fa72645b541c18b84b861de46f4740449e1d7c987b4d9ef715d815d613f93262225bc319e217df6215d6f123efadb9a412dcf937fe0a41cbecf279dfb2a0
   languageName: node
   linkType: hard
 
