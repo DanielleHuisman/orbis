@@ -43,7 +43,7 @@
     "dependencies": {
         "@types/email-templates": "^10.0.3",
         "email-templates": "^11.1.1",
-        "nodemailer": "^8.0.4"
+        "nodemailer": "^9.0.1"
     },
     "devDependencies": {
         "@orbis-framework/core": "^0.3.18"
