@@ -7887,9 +7887,9 @@ __metadata:
   linkType: hard
 
 "nodemailer@npm:^10.0.9":
-  version: 10.0.13
-  resolution: "nodemailer@npm:10.0.13"
-  checksum: 3004362415e977a3fdf2a0c0ec0ad9fd3724d5ccba3951763bd28fa13a6b87cab13e790c934ccb66b6657ca8149a7efc4cc973867760588169efd8ec3fb99908
+  version: 10.3.1
+  resolution: "nodemailer@npm:10.3.1"
+  checksum: a960ba9e7cb8f7135b828fb72bcdfd061bb914c6357578ed6613dd5303e8461710a1151210e95a92542461128e900038dd0794fc27bd74b297bd822013cfe8e8
   languageName: node
   linkType: hard
 
